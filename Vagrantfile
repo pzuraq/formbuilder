@@ -5,6 +5,8 @@
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.network "forwarded_port", guest: 3000, host: 3000
+
   config.vm.provision :shell, :inline => 'apt-get update'
   config.vm.provision :shell, :inline => 'apt-get install build-essential ruby1.9.1-dev --no-upgrade --yes'
   config.vm.provision :shell, :inline => "gem install chef --version 11.4.2 --no-rdoc --no-ri --conservative"
@@ -123,5 +125,5 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     }
   end
 
-  config.vm.provision :shell, :inline => 'bundle install --gemfile=/vagrant/Gemfile'
+  # config.vm.provision :shell, :inline => 'bundle install --gemfile=/vagrant/Gemfile'
 end
