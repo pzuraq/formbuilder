@@ -1,0 +1,9 @@
+[submodule "puppet/modules/postgresql"]
+	path = puppet/modules/postgresql
+	url = https://github.com/puppetlabs/puppetlabs-postgresql.git
+[submodule "puppet/modules/rbenv"]
+	path = puppet/modules/rbenv
+	url = https://github.com/justindowning/puppet-rbenv.git
+[submodule "puppet/modules/memcached"]
+	path = puppet/modules/memcached
+	url = https://github.com/saz/puppet-memcached.git
