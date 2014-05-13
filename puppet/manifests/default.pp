@@ -38,6 +38,7 @@ class install_postgres {
     version             => '9.3',
   }->
   class { 'postgresql::server': }
+  class { 'postgresql::server::contrib': }
   class { 'postgresql::lib::devel': }
 
   postgresql::server::role { "vagrant":
@@ -45,12 +46,12 @@ class install_postgres {
   }
 
   postgresql::server::db { 'formbuilder':
-    user => 'rails',
+    user => 'vagrant',
     password => "${password}"
   }
 
   postgresql::server::db { 'formbuilder_test':
-    user => 'rails',
+    user => 'vagrant',
     password => "${password}"
   }
 }

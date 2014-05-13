@@ -4,6 +4,7 @@ development:
   database: formbuilder
   pool: 5
   username: vagrant
+  password: hDprK5pvXp6FavcAn6c4jUpGXScSK5SrfBFYxU2mrPuwZ2tjQfx9HA7pMuULDA78TjWAKcR7
 
 test:
   adapter: postgresql
@@ -11,6 +12,7 @@ test:
   database: formbuilder_test
   pool: 5
   username: vagrant
+  password: hDprK5pvXp6FavcAn6c4jUpGXScSK5SrfBFYxU2mrPuwZ2tjQfx9HA7pMuULDA78TjWAKcR7
 
 production:
   adapter: postgresql
@@ -18,3 +20,4 @@ production:
   database: formbuilder
   pool: 5
   username: vagrant
+  password: hDprK5pvXp6FavcAn6c4jUpGXScSK5SrfBFYxU2mrPuwZ2tjQfx9HA7pMuULDA78TjWAKcR7
