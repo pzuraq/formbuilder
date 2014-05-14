@@ -12,4 +12,4 @@
 /tmp
 
 # Ignore vagrant
-.vagrant
+/.vagrant/

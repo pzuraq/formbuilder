@@ -13,4 +13,9 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
+//= require bootstrap
+//= require knockout
+//= require knockout-validations
 //= require_tree .
+
+var myViewModel = ko.validatedObservable();
