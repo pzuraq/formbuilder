@@ -19,28 +19,75 @@
 //= require_tree .
 
 ko.validation.configure({
-    registerExtenders: true,
-    messagesOnModified: true,
-    insertMessages: true,
-    parseInputAttributes: true,
-    messageTemplate: null
+  registerExtenders: true,
+  messagesOnModified: true,
+  insertMessages: true,
+  parseInputAttributes: true,
+  messageTemplate: null
 });
+
+ko.bindingHandlers.fadeVisible = {
+  init: function(element, valueAccessor) {
+    // Initially set the element to be instantly visible/hidden depending on the value
+    var value = valueAccessor();
+    $(element).toggle(ko.unwrap(value)); // Use "unwrapObservable" so we can handle values that may or may not be observable
+  },
+  update: function(element, valueAccessor) {
+    // Whenever the value subsequently changes, slowly fade the element in or out
+    var value = valueAccessor();
+    ko.unwrap(value) ? $(element).fadeIn() : $(element).fadeOut();
+  }
+};
 
 var viewModel = {}
 
 $(function () {
   $('.section').each(function(index) {
-    var properties = {};
+    var selector = $(this);
 
-    $(this).children('input').each(function() {
-      binding = $(this).data('bind').split(/[,.:]/);
+    var section = function() {
+      var self = this;
 
-      properties[binding[2]] = ko.observable();
-    });
+      self._display = ko.observable(false);
+      self._nextSection = selector.data('next');
+      self.properties = [];
 
-    viewModel['section'+(index+1)] = ko.validatedObservable(properties);
+      selector.children('input').each(function() {
+        var binding = $(this).data('bind').split(/[,.:]/),
+            property = binding[2];
+
+
+        self[property] = ko.observable();
+        self.properties.push(property);
+      });
+
+      self.setDisplay = ko.computed(function() {
+        var next = viewModel[self._nextSection] ? viewModel[self._nextSection]() : null;
+
+        $.each(self.properties, function(index, prop) {
+          self[prop]();
+        });
+
+        if(next) {
+          if (self.isValid && self.isValid()) {
+            next._display(true)
+          } else {
+            $.each(next.properties, function(index, prop) {
+              next[prop](null);
+            });
+
+            next._display(false);
+          }
+        }
+      });
+    };
+
+    var otherProps = {};
+
+    viewModel[selector.attr('id')] = ko.validatedObservable(new section());
   })
 
+  viewModel.section1()._display(true);
 
   viewModel.errors = ko.validation.group(viewModel);
 
