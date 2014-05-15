@@ -10,12 +10,40 @@
 // Read Sprockets README (https://github.com/sstephenson/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//= require jquery
-//= require jquery_ujs
+//= require jquery/dist/jquery
+//= require jquery-ujs/src/rails
 //= require turbolinks
-//= require bootstrap
-//= require knockout
-//= require knockout-validations
+//= require bootstrap/dist/js/bootstrap
+//= require knockout/dist/knockout
+//= require knockout-validation/Dist/knockout.validation
 //= require_tree .
 
-var myViewModel = ko.validatedObservable();
+ko.validation.configure({
+    registerExtenders: true,
+    messagesOnModified: true,
+    insertMessages: true,
+    parseInputAttributes: true,
+    messageTemplate: null
+});
+
+var viewModel = {}
+
+$(function () {
+  $('.section').each(function(index) {
+    var properties = {};
+
+    $(this).children('input').each(function() {
+      binding = $(this).data('bind').split(/[,.:]/);
+
+      properties[binding[2]] = ko.observable();
+    });
+
+    viewModel['section'+(index+1)] = ko.validatedObservable(properties);
+  })
+
+
+  viewModel.errors = ko.validation.group(viewModel);
+
+  ko.applyBindings(viewModel);
+
+});
