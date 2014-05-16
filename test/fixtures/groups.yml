@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: MyString
+  integer: MyString
+  group_id: 1
+  name: MyString
+  moderators: MyText
+  editors: MyText
+
+two:
+  user_id: MyString
+  integer: MyString
+  group_id: 1
+  name: MyString
+  moderators: MyText
+  editors: MyText
