@@ -1,49 +1,25 @@
-<h1><%= @user_group.name %>'s Home</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th>Subgroups</th>
-
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @groups.each do |group| %>
-      <tr>
-        <td><%= group.name %></td>
-        <td><%= link_to 'Show', group %></td>
-        <td><%= link_to 'Destroy', group, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-<br>
-<%= link_to 'New Subgroup', new_group_path(:group_id => @user_group.id) %>
-<br>
-<p>================================</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>Forms</th>
-
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @forms.each do |form| %>
-      <tr>
-        <td><%= form.name %></td>
-        <td><%= link_to 'Show', form %></td>
-        <td><%= link_to 'Edit', edit_form_path(form) %></td>
-        <td><%= link_to 'Destroy', form, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-<br>
-<%= link_to 'New Form', new_form_path(:group_id => @user_group.id) %>
-<p>================================</p>
+<div class="container">
+  <h1>Home#index</h1>
+  <div id="section1" class="section" data-bind="fadeVisible:section1()._display" data-next="section2">
+    <input type="text" data-bind="value:section1().question1,valueUpdate:'afterkeydown'" required />
+  </div>
+  <div id="section2" class="section" data-bind="fadeVisible:section2()._display" data-branch="question2=0:section3|question2=1:section5">
+    <input type="text" data-bind="value:section2().question2,valueUpdate:'afterkeydown'" required />
+  </div>
+  <div id="section3" class="section" data-bind="fadeVisible:section3()._display" data-next="section4">
+    <h2>Branch1</h2>
+    <input type="text" data-bind="value:section3().question3,valueUpdate:'afterkeydown'" required />
+  </div>
+  <div id="section4" class="section" data-bind="fadeVisible:section4()._display">
+    <h2>Branch1</h2>
+    <input type="text" data-bind="value:section4().question4,valueUpdate:'afterkeydown'" required />
+  </div>
+  <div id="section5" class="section" data-bind="fadeVisible:section5()._display" data-next="section6">
+    <h2>Branch2</h2>
+    <input type="text" data-bind="value:section5().question5,valueUpdate:'afterkeydown'" required />
+  </div>
+  <div id="section6" class="section" data-bind="fadeVisible:section6()._display">
+    <h2>Branch2</h2>
+    <input type="text" data-bind="value:section6().question6,valueUpdate:'afterkeydown'" required />
+  </div>
+</div>

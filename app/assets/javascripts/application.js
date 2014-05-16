@@ -29,13 +29,15 @@ ko.validation.configure({
 ko.bindingHandlers.fadeVisible = {
   init: function(element, valueAccessor) {
     // Initially set the element to be instantly visible/hidden depending on the value
-    var value = valueAccessor();
-    $(element).toggle(ko.unwrap(value)); // Use "unwrapObservable" so we can handle values that may or may not be observable
+    var value = ko.unwrap(valueAccessor());
+    $(element).toggle(value); // Use "unwrapObservable" so we can handle values that may or may not be observable
   },
   update: function(element, valueAccessor) {
     // Whenever the value subsequently changes, slowly fade the element in or out
-    var value = valueAccessor();
-    ko.unwrap(value) ? $(element).fadeIn() : $(element).fadeOut();
+    var value = ko.unwrap(valueAccessor());
+    value ? $('.section').promise().then(function() {
+       $(element).fadeIn()
+    }) : $(element).fadeOut();
   }
 };
 
@@ -48,38 +50,84 @@ $(function () {
     var section = function() {
       var self = this;
 
-      self._display = ko.observable(false);
-      self._nextSection = selector.data('next');
+      self.isValid = ko.observable();
       self.properties = [];
+
+      self._display = ko.observable(false);
+      self._currentBranch = selector.data('next');
+      self._branch = selector.data('branch');
+
+      if(self._branch) {
+        self._branch = self._branch.split('|');
+        $.each(self._branch, function(branchIndex, branch) {
+          self._branch[branchIndex] = branch.split(':');
+          self._branch[branchIndex][0] = self._branch[branchIndex][0].split('+');
+
+          $.each(self._branch[branchIndex][0], function(questionIndex, question) {
+            self._branch[branchIndex][0][questionIndex] = question.split('=');
+          });
+        });
+      }
 
       selector.children('input').each(function() {
         var binding = $(this).data('bind').split(/[,.:]/),
             property = binding[2];
-
 
         self[property] = ko.observable();
         self.properties.push(property);
       });
 
       self.setDisplay = ko.computed(function() {
-        var next = viewModel[self._nextSection] ? viewModel[self._nextSection]() : null;
-
         $.each(self.properties, function(index, prop) {
           self[prop]();
         });
 
-        if(next) {
-          if (self.isValid && self.isValid()) {
-            next._display(true)
-          } else {
-            $.each(next.properties, function(index, prop) {
-              next[prop](null);
+        if (self._branch) {
+          $.each(self._branch, function(i, branch) {
+            var isBranch = true;
+
+            $.each(branch[0], function(j, question) {
+              if (self[question[0]]() != question[1]) {
+                isBranch = false;
+              }
             });
 
-            next._display(false);
+            if (isBranch) {
+              self._previousBranch = self._currentBranch
+              self._currentBranch = branch[1];
+            }
+          });
+        }
+
+        var currentBranch  = viewModel[self._currentBranch]  ? viewModel[self._currentBranch]()  : null;
+        var previousBranch = viewModel[self._previousBranch] ? viewModel[self._previousBranch]() : null;
+
+        if (self.isValid()) {
+          if (previousBranch && previousBranch != currentBranch) {
+            viewModel._erasingBranch = true;
+            $.each(previousBranch.properties, function(index, prop) {
+              previousBranch[prop](null);
+            });
+            previousBranch._display(false);
+          }
+
+          if(currentBranch) {
+            currentBranch._display(true);
+          }
+        } else {
+          console.log(self._currentBranch)
+          if (viewModel._erasingBranch) {
+            if (currentBranch) {
+              $.each(currentBranch.properties, function(index, prop) {
+                currentBranch[prop](null);
+              });
+              currentBranch._display(false);
+            } else {
+              viewModel._erasingBranch = false;
+            }
           }
         }
-      });
+      }).extend({ rateLimit: 50 });
     };
 
     var otherProps = {};
