@@ -4,8 +4,6 @@ class CreateGroups < ActiveRecord::Migration
       t.integer :user_id
       t.integer :group_id
       t.string :name
-      t.text :moderators
-      t.text :editors
 
       t.timestamps
     end
