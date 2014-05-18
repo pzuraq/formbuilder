@@ -28,8 +28,7 @@ ActiveRecord::Schema.define(version: 20140518042625) do
   end
 
   create_table "groups", force: true do |t|
-    t.string   "user_id"
-    t.string   "integer"
+    t.integer  "user_id"
     t.integer  "group_id"
     t.string   "name"
     t.text     "moderators"
