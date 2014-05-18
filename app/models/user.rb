@@ -6,4 +6,10 @@ class User < ActiveRecord::Base
   validates :password_confirmation, presence: true
 
   validates :username, uniqueness: true
+  after_create :create_group
+
+  def create_group
+    Group.create(user: self, name: self.username)
+  end
+  
 end

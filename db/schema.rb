@@ -31,8 +31,6 @@ ActiveRecord::Schema.define(version: 20140518042625) do
     t.integer  "user_id"
     t.integer  "group_id"
     t.string   "name"
-    t.text     "moderators"
-    t.text     "editors"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

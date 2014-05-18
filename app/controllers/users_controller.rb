@@ -3,9 +3,11 @@ class UsersController < ApplicationController
 
   skip_before_filter :require_login, only: [:new, :create]
 
+
+
   # GET /users
   def index
-    @users = User.all
+
   end
 
   # GET /users/1

@@ -6,11 +6,6 @@
 </p>
 
 <p>
-  <strong>Integer:</strong>
-  <%= @group.integer %>
-</p>
-
-<p>
   <strong>Group:</strong>
   <%= @group.group_id %>
 </p>
@@ -20,15 +15,6 @@
   <%= @group.name %>
 </p>
 
-<p>
-  <strong>Moderators:</strong>
-  <%= @group.moderators %>
-</p>
-
-<p>
-  <strong>Editors:</strong>
-  <%= @group.editors %>
-</p>
 
 <%= link_to 'Edit', edit_group_path(@group) %> |
 <%= link_to 'Back', groups_path %>
