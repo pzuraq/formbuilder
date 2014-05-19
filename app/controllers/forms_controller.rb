@@ -27,11 +27,15 @@ class FormsController < ApplicationController
     @form.group_id = params[:group_id]
     @form.user_id = session[:user_id]
 
+    unless @form.group.moderators.find(current_user)
+      redirect_to group_url(@form.group), notice: "I'm sorry Dave, I can't let you do that."
+    end
+      
     if @form.save
       redirect_to [@form.group,@form], notice: 'Form was successfully created.'
     else
       render :new
-    end
+    end    
   end
 
   # PATCH/PUT /forms/1

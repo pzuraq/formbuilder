@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140518042625) do
+ActiveRecord::Schema.define(version: 20140519215918) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,6 +34,15 @@ ActiveRecord::Schema.define(version: 20140518042625) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "permissions", force: true do |t|
+    t.integer "group_id"
+    t.integer "user_id"
+    t.string  "role"
+    t.boolean "inherited"
+  end
+
+  add_index "permissions", ["group_id", "user_id"], name: "index_permissions_on_group_id_and_user_id", unique: true, using: :btree
 
   create_table "responses", force: true do |t|
     t.integer  "user_id"
