@@ -4,16 +4,22 @@ class GroupsController < ApplicationController
 
   # GET /groups
   def index
-
+    # The user's personal group (user_group) is the only group with both their ID, and a null group_id
+    @user_group = Group.where(:user_id => session[:user_id], :group_id => [false, nil]).first! # First ensures a single record
+    redirect_to(@user_group)
   end
 
   # GET /groups/1
   def show
+    @groups = Group.where(:group_id => params[:id])
+    @forms = Form.where(:group_id => params[:id])
   end
 
   # GET /groups/new
   def new
     @group = Group.new
+    @group.group_id = params[:group_id]
+    @group.user_id = session[:user_id]
   end
 
   # GET /groups/1/edit
@@ -23,7 +29,8 @@ class GroupsController < ApplicationController
   # POST /groups
   def create
     @group = Group.new(group_params)
-
+    @group.group_id = params[:group_id]
+    @group.user_id = session[:user_id]
     if @group.save
       redirect_to @group, notice: 'Group was successfully created.'
     else
@@ -54,6 +61,6 @@ class GroupsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def group_params
-      params.require(:group).permit(:user_id, :integer, :group_id, :name, :moderators, :editors)
+      params.require(:group).permit(:user_id, :group_id, :name)
     end
 end
