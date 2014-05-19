@@ -2,8 +2,16 @@ Rails.application.routes.draw do
 
   resources :user_sessions
   resources :users
-  resources :forms
-  resources :groups
+  resources :groups do
+    collection do
+      get :back
+    end
+  end
+  resources :forms do
+    collection do
+      get :back
+    end
+  end
 
 
   get 'login' => 'user_sessions#new', :as => :login

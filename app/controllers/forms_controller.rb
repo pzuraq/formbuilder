@@ -13,6 +13,8 @@ class FormsController < ApplicationController
   # GET /forms/new
   def new
     @form = Form.new
+    @form.group_id = params[:group_id]
+    @form.user_id = session[:user_id]
   end
 
   # GET /forms/1/edit
@@ -22,6 +24,8 @@ class FormsController < ApplicationController
   # POST /forms
   def create
     @form = Form.new(form_params)
+    @form.group_id = params[:group_id]
+    @form.user_id = session[:user_id]
 
     if @form.save
       redirect_to @form, notice: 'Form was successfully created.'
@@ -43,6 +47,11 @@ class FormsController < ApplicationController
   def destroy
     @form.destroy
     redirect_to forms_url, notice: 'Form was successfully destroyed.'
+  end
+
+  def back
+    @group = Group.where(:id => params[:parent_id])
+    redirect_to groups_url :action => 'show', :id => params[:parent_id]
   end
 
   private

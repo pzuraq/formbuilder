@@ -1,4 +1,4 @@
-<h1>Group Name: <%= @group.name %></h1>
+<h1><%= @group.name %></h1>
 
 <table>
   <thead>
@@ -48,5 +48,5 @@
 <%= link_to 'New Form', new_form_path(:group_id => @group.id) %>
 <p>================================</p>
 <% if @group.group_id? %>
-	<%= link_to 'Back', group_path(@group.group_id) %>
+	<%= link_to('Back', :action => 'back', :parent_id => @group.group_id) %>
 <% end %>

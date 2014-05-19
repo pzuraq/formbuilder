@@ -1,12 +1,16 @@
 class GroupsController < ApplicationController
   before_action :set_group, only: [:show, :edit, :update, :destroy]
-
+  before_filter :require_login, except: [:index]
 
   # GET /groups
   def index
-    # The user's personal group (user_group) is the only group with both their ID, and a null group_id
-    @user_group = Group.where(:user_id => session[:user_id], :group_id => [false, nil]).first! # First ensures a single record
-    redirect_to(@user_group)
+    if session[:user_id]
+      # The user's personal group (user_group) is the only group with both their ID, and a null group_id
+      @user_group = Group.where(:user_id => session[:user_id], :group_id => [false, nil]).first! # First ensures a single record
+      redirect_to :action => 'show', :id => @user_group.id
+    else
+      redirect_to :login
+    end
   end
 
   # GET /groups/1
@@ -51,6 +55,10 @@ class GroupsController < ApplicationController
   def destroy
     @group.destroy
     redirect_to groups_url, notice: 'Group was successfully destroyed.'
+  end
+
+  def back
+    redirect_to :action => 'show', :id => params[:parent_id]
   end
 
   private

@@ -9,7 +9,7 @@ class User < ActiveRecord::Base
   after_create :create_group
 
   def create_group
-    Group.create(user: self, name: self.username)
+    Group.create(user: self, name: self.username+"'s group")
   end
   
 end
