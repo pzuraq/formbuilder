@@ -36,7 +36,6 @@ class FormsController < ApplicationController
 
   # PATCH/PUT /forms/1
   def update
-    @form = Form.new(params[:form])
     if @form.update(form_params)
       redirect_to [@form.group,@form], notice: 'Form was successfully updated.'
     else
@@ -46,9 +45,11 @@ class FormsController < ApplicationController
 
   # DELETE /forms/1
   def destroy
+
     @group = @form.group
     @form.destroy
     redirect_to group_url(@group), notice: 'Form was successfully destroyed.'
+
   end
 
   private
