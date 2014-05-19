@@ -28,7 +28,7 @@ class FormsController < ApplicationController
     @form.user_id = session[:user_id]
 
     if @form.save
-      redirect_to @form, notice: 'Form was successfully created.'
+      redirect_to [@form.group,@form], notice: 'Form was successfully created.'
     else
       render :new
     end
@@ -36,8 +36,9 @@ class FormsController < ApplicationController
 
   # PATCH/PUT /forms/1
   def update
+    @form = Form.new(params[:form])
     if @form.update(form_params)
-      redirect_to @form, notice: 'Form was successfully updated.'
+      redirect_to [@form.group,@form], notice: 'Form was successfully updated.'
     else
       render :edit
     end
@@ -45,13 +46,9 @@ class FormsController < ApplicationController
 
   # DELETE /forms/1
   def destroy
+    @group = @form.group
     @form.destroy
-    redirect_to forms_url, notice: 'Form was successfully destroyed.'
-  end
-
-  def back
-    @group = Group.where(:id => params[:parent_id])
-    redirect_to groups_url :action => 'show', :id => params[:parent_id]
+    redirect_to group_url(@group), notice: 'Form was successfully destroyed.'
   end
 
   private

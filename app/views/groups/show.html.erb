@@ -37,16 +37,16 @@
     <% @forms.each do |form| %>
       <tr>
         <td><%= form.name %></td>
-        <td><%= link_to 'Show', form %></td>
-        <td><%= link_to 'Edit', edit_form_path(form) %></td>
-        <td><%= link_to 'Destroy', form, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Show', group_form_path(:group_id => @group.id, :id => form.id) %></td>
+        <td><%= link_to 'Edit', edit_group_form_path(:id => form.id, :group_id => @group.id) %></td>
+        <td><%= link_to 'Destroy', group_form_path(:group_id => @group.id, :id => form.id), method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
 <br>
-<%= link_to 'New Form', new_form_path(:group_id => @group.id) %>
+<%= link_to 'New Form', new_group_form_path(:group_id => @group.id) %>
 <p>================================</p>
 <% if @group.group_id? %>
-	<%= link_to('Back', :action => 'back', :parent_id => @group.group_id) %>
+	<%= link_to('Back', :action => 'show', :id => @group.group_id) %>
 <% end %>
