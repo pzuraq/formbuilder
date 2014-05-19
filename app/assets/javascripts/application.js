@@ -19,12 +19,77 @@
 //= require_tree .
 
 ko.validation.configure({
-  registerExtenders: true,
-  messagesOnModified: true,
-  insertMessages: true,
-  parseInputAttributes: true,
-  messageTemplate: null
+	registerExtenders: true,
+	messagesOnModified: true,
+	insertMessages: true,
+	parseInputAttributes: true,
+	messageTemplate: null
 });
+
+var async = function (expr) {
+		if (window.setImmediate) { window.setImmediate(expr); }
+		else { window.setTimeout(expr, 0); }
+};
+
+ko.bindingHandlers['validationCore'] = (function () {
+
+	return {
+		init: function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+			var config = ko.validation.utils.getConfigOptions(element);
+			console.log(allBindingsAccessor('checked'))
+
+			// parse html5 input validation attributes, optional feature
+			if (config.parseInputAttributes) {
+				async(function () { exports.parseInputValidationAttributes(element, valueAccessor) });
+			}
+
+			// if requested insert message element and apply bindings
+			if (config.insertMessages && utils.isValidatable(valueAccessor())) {
+
+				// insert the <span></span>
+				var validationMessageElement = exports.insertValidationMessage(element);
+
+				// if we're told to use a template, make sure that gets rendered
+				if (config.messageTemplate) {
+					ko.renderTemplate(config.messageTemplate, { field: valueAccessor() }, null, validationMessageElement, 'replaceNode');
+				} else {
+					ko.applyBindingsToNode(validationMessageElement, { validationMessage: valueAccessor() });
+				}
+			}
+
+			// write the html5 attributes if indicated by the config
+			if (config.writeInputAttributes && utils.isValidatable(valueAccessor())) {
+
+				exports.writeInputValidationAttributes(element, valueAccessor);
+			}
+
+			// if requested, add binding to decorate element
+			if (config.decorateElement && utils.isValidatable(valueAccessor())) {
+				ko.applyBindingsToNode(element, { validationElement: valueAccessor() });
+			}
+		},
+
+		update: function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+				// hook for future extensibility
+		}
+	};
+}());
+
+ko.validatedObservable = function (initialValue) {
+	if (!ko.validation.utils.isObject(initialValue)) { return ko.observable(initialValue).extend({ validatable: true }); }
+
+	var obsv = ko.observable(initialValue);
+	obsv.errors = ko.validation.group(initialValue);
+	obsv.isValid = ko.computed(function () {
+		if (obsv().required) {
+			return obsv().required() ? obsv.errors().length === 0 : true;
+		} else {
+			return obsv.errors().length === 0;
+		}
+	});
+
+	return obsv;
+};
 
 ko.bindingHandlers.fadeVisible = {
   init: function(element, valueAccessor) {
@@ -35,7 +100,7 @@ ko.bindingHandlers.fadeVisible = {
   update: function(element, valueAccessor) {
     // Whenever the value subsequently changes, slowly fade the element in or out
     var value = ko.unwrap(valueAccessor());
-    value ? $('.section').promise().then(function() {
+    value ? $('div').promise().then(function() {
        $(element).fadeIn()
     }) : $(element).fadeOut();
   }
@@ -43,102 +108,106 @@ ko.bindingHandlers.fadeVisible = {
 
 var viewModel = {}
 
+function branch(parent, selector) {
+	var self = this;
+
+	self.parent = parent;
+	self.required = ko.observable(false);
+	self.branchConditions = selector.data('branch').split('+');
+	self.display = ko.observable(false);
+	self.sections = [];
+
+	for (condition in self.branchConditions) {
+		self.branchConditions[condition] = self.branchConditions[condition].split('=');
+	}
+
+	selector.children('.section').each(function(index) {
+		var sectionName = $(this).attr('id');
+
+		self[sectionName] = ko.validatedObservable(new section(index, self, $(this)));
+		self.sections.push(sectionName);
+	});
+
+	self.setRequired = ko.computed(function() {
+		var isRequired = true;
+
+		for (condition in self.branchConditions) {
+			var question = self.branchConditions[condition][0],
+					answer   = self.branchConditions[condition][1];
+
+			isRequired = isRequired && self.parent[question]() == answer;
+		}
+
+		self.required(isRequired);
+	});
+
+	self.clearBranch = ko.computed(function() {
+		if (!self.required()) {
+			for (sectionName in self.sections) {
+				self[self.sections[sectionName]]().clearProperties();
+			}
+		}
+	});
+}
+
+function section(index, parent, selector) {
+	var self = this;
+
+	self.parent = parent;
+	self.isValid = ko.observable();
+	self.properties = [];
+	self.index = index;
+	self.display = self.index == 0 ? ko.observable(true) : ko.observable(false);
+
+	selector.children('.form-group').find('input').each(function() {
+		var property = $(this).attr('name'),
+		    validations = $(this).data('validations');
+
+		if(!self[property]) {
+			self[property] = ko.observable();
+
+			if (validations.required) {
+				self[property].extend({ required: true });
+			}
+
+			self.properties.push(property);
+		}
+	});
+
+	selector.children('.branch').each(function() {
+		var branchName = $(this).attr('id');
+
+		self[branchName] = ko.validatedObservable(new branch(self, $(this)));
+	});
+
+	self.setDisplay = ko.computed(function() {
+		$.each(self.properties, function(index, prop) {
+			self[prop]();
+		});
+
+		var next = parent['s'+(index+1)];
+
+		if (next) {
+			if (self.isValid()) {
+				next().display(true);
+			} else {
+				next().display(false);
+			}
+		}
+	}).extend({ rateLimit: 50 });
+
+	self.clearProperties = function() {
+		for (property in self.properties) {
+			self[self.properties[property]](null);
+		}
+	}
+}
+
+
 $(function () {
-  $('.section').each(function(index) {
-    var selector = $(this);
-
-    var section = function() {
-      var self = this;
-
-      self.isValid = ko.observable();
-      self.properties = [];
-
-      self._display = ko.observable(false);
-      self._currentBranch = selector.data('next');
-      self._branch = selector.data('branch');
-
-      if(self._branch) {
-        self._branch = self._branch.split('|');
-        $.each(self._branch, function(branchIndex, branch) {
-          self._branch[branchIndex] = branch.split(':');
-          self._branch[branchIndex][0] = self._branch[branchIndex][0].split('+');
-
-          $.each(self._branch[branchIndex][0], function(questionIndex, question) {
-            self._branch[branchIndex][0][questionIndex] = question.split('=');
-          });
-        });
-      }
-
-      selector.children('input').each(function() {
-        var binding = $(this).data('bind').split(/[,.:]/),
-            property = binding[2];
-
-        self[property] = ko.observable();
-        self.properties.push(property);
-      });
-
-      self.setDisplay = ko.computed(function() {
-        $.each(self.properties, function(index, prop) {
-          self[prop]();
-        });
-
-        if (self._branch) {
-          $.each(self._branch, function(i, branch) {
-            var isBranch = true;
-
-            $.each(branch[0], function(j, question) {
-              if (self[question[0]]() != question[1]) {
-                isBranch = false;
-              }
-            });
-
-            if (isBranch) {
-              self._previousBranch = self._currentBranch
-              self._currentBranch = branch[1];
-            }
-          });
-        }
-
-        var currentBranch  = viewModel[self._currentBranch]  ? viewModel[self._currentBranch]()  : null;
-        var previousBranch = viewModel[self._previousBranch] ? viewModel[self._previousBranch]() : null;
-
-        if (self.isValid()) {
-          if (previousBranch && previousBranch != currentBranch) {
-            viewModel._erasingBranch = true;
-            $.each(previousBranch.properties, function(index, prop) {
-              previousBranch[prop](null);
-            });
-            previousBranch._display(false);
-          }
-
-          if(currentBranch) {
-            currentBranch._display(true);
-          }
-        } else {
-          console.log(self._currentBranch)
-          if (viewModel._erasingBranch) {
-            if (currentBranch) {
-              $.each(currentBranch.properties, function(index, prop) {
-                currentBranch[prop](null);
-              });
-              currentBranch._display(false);
-            } else {
-              viewModel._erasingBranch = false;
-            }
-          }
-        }
-      }).extend({ rateLimit: 50 });
-    };
-
-    var otherProps = {};
-
-    viewModel[selector.attr('id')] = ko.validatedObservable(new section());
+  $('.container').children('.section').each(function(index) {
+    viewModel[$(this).attr('id')] = ko.validatedObservable(new section(index, viewModel, $(this)));
   })
 
-  viewModel.section1()._display(true);
-
-  viewModel.errors = ko.validation.group(viewModel);
-
   ko.applyBindings(viewModel);
-
 });

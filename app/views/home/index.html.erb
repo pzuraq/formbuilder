@@ -1,25 +1,46 @@
 <div class="container">
   <h1>Home#index</h1>
-  <div id="section1" class="section" data-bind="fadeVisible:section1()._display" data-next="section2">
-    <input type="text" data-bind="value:section1().question1,valueUpdate:'afterkeydown'" required />
-  </div>
-  <div id="section2" class="section" data-bind="fadeVisible:section2()._display" data-branch="question2=0:section3|question2=1:section5">
-    <input type="text" data-bind="value:section2().question2,valueUpdate:'afterkeydown'" required />
-  </div>
-  <div id="section3" class="section" data-bind="fadeVisible:section3()._display" data-next="section4">
-    <h2>Branch1</h2>
-    <input type="text" data-bind="value:section3().question3,valueUpdate:'afterkeydown'" required />
-  </div>
-  <div id="section4" class="section" data-bind="fadeVisible:section4()._display">
-    <h2>Branch1</h2>
-    <input type="text" data-bind="value:section4().question4,valueUpdate:'afterkeydown'" required />
-  </div>
-  <div id="section5" class="section" data-bind="fadeVisible:section5()._display" data-next="section6">
-    <h2>Branch2</h2>
-    <input type="text" data-bind="value:section5().question5,valueUpdate:'afterkeydown'" required />
-  </div>
-  <div id="section6" class="section" data-bind="fadeVisible:section6()._display">
-    <h2>Branch2</h2>
-    <input type="text" data-bind="value:section6().question6,valueUpdate:'afterkeydown'" required />
-  </div>
+  <%= @rendered.html_safe %>
 </div>
+
+<!-- {{#section}}
+  {{#radio}}
+    {{#option value="0"}}
+      Don't followup
+    {{/option}}
+    {{#option value="1" followup="true"}}
+      Do followup
+    {{/option}}
+  {{/radio}}
+
+  {{#followup}}
+    {{#section}}
+
+    {{/section}}
+  {{/followup}}
+{{/section}}
+
+
+
+{{#section}}
+  {{radio}}
+    {{#option value="1"}}Yes{{/option}}
+    {{#option value="0"}}No{{/option}}
+  {{/radio}}
+  {{radio}}
+    {{#option value="1"}}Yes{{/option}}
+    {{#option value="0"}}No{{/option}}
+  {{/radio}}
+
+  {{#branch}}
+    {{#section}}
+
+    {{/section}}
+  {{/branch}}
+
+  {{#branch}}
+    {{#section}}
+
+    {{/section}}
+  {{/branch}}
+{{/section}} -->
