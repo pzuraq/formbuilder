@@ -26,55 +26,6 @@ ko.validation.configure({
 	messageTemplate: null
 });
 
-var async = function (expr) {
-		if (window.setImmediate) { window.setImmediate(expr); }
-		else { window.setTimeout(expr, 0); }
-};
-
-ko.bindingHandlers['validationCore'] = (function () {
-
-	return {
-		init: function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
-			var config = ko.validation.utils.getConfigOptions(element);
-			console.log(allBindingsAccessor('checked'))
-
-			// parse html5 input validation attributes, optional feature
-			if (config.parseInputAttributes) {
-				async(function () { exports.parseInputValidationAttributes(element, valueAccessor) });
-			}
-
-			// if requested insert message element and apply bindings
-			if (config.insertMessages && utils.isValidatable(valueAccessor())) {
-
-				// insert the <span></span>
-				var validationMessageElement = exports.insertValidationMessage(element);
-
-				// if we're told to use a template, make sure that gets rendered
-				if (config.messageTemplate) {
-					ko.renderTemplate(config.messageTemplate, { field: valueAccessor() }, null, validationMessageElement, 'replaceNode');
-				} else {
-					ko.applyBindingsToNode(validationMessageElement, { validationMessage: valueAccessor() });
-				}
-			}
-
-			// write the html5 attributes if indicated by the config
-			if (config.writeInputAttributes && utils.isValidatable(valueAccessor())) {
-
-				exports.writeInputValidationAttributes(element, valueAccessor);
-			}
-
-			// if requested, add binding to decorate element
-			if (config.decorateElement && utils.isValidatable(valueAccessor())) {
-				ko.applyBindingsToNode(element, { validationElement: valueAccessor() });
-			}
-		},
-
-		update: function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
-				// hook for future extensibility
-		}
-	};
-}());
-
 ko.validatedObservable = function (initialValue) {
 	if (!ko.validation.utils.isObject(initialValue)) { return ko.observable(initialValue).extend({ validatable: true }); }
 
@@ -160,8 +111,10 @@ function section(index, parent, selector) {
 	self.display = self.index == 0 ? ko.observable(true) : ko.observable(false);
 
 	selector.children('.form-group').find('input').each(function() {
-		var property = $(this).attr('name'),
+		var property = $(this).attr('name').replace(/ans\[|\]/g,''),
 		    validations = $(this).data('validations');
+
+		console.log(property)
 
 		if(!self[property]) {
 			self[property] = ko.observable();
@@ -205,7 +158,7 @@ function section(index, parent, selector) {
 
 
 $(function () {
-  $('.container').children('.section').each(function(index) {
+  $('.form').children('.section').each(function(index) {
     viewModel[$(this).attr('id')] = ko.validatedObservable(new section(index, viewModel, $(this)));
   })
 

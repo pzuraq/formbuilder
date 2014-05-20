@@ -45,7 +45,7 @@
     <% @forms.each do |form| %>
       <tr>
         <td><%= form.name %></td>
-        <td><%= link_to 'Show', group_form_path(:group_id => @group.id, :id => form.id) %></td>
+        <td><%= link_to 'Respond', new_group_form_response_path(:group_id => @group.id, :form_id => form.id) %></td>
         <% if (@group.moderators.include? current_user) or (@group.editors.include? current_user) %>
           <td><%= link_to 'Edit', edit_group_form_path(:id => form.id, :group_id => @group.id) %></td>
           <td><%= link_to 'Destroy', group_form_path(:group_id => @group.id, :id => form.id), method: :delete, data: { confirm: 'Are you sure?' } %></td>

@@ -1,4 +1,7 @@
 class ResponsesController < ApplicationController
+  include HandlebarsSupport
+
+  before_action :set_parents
   before_action :set_response, only: [:show, :edit, :update, :destroy]
 
 
@@ -15,6 +18,8 @@ class ResponsesController < ApplicationController
 
   # GET /responses/new
   def new
+    @compiled = compile_template(@form.template)
+
     @response = Response.new
   end
 
@@ -25,11 +30,14 @@ class ResponsesController < ApplicationController
   # POST /responses
   # POST /responses.json
   def create
-    @response = Response.new(response_params)
+    @response = Response.new({
+        form: @form,
+        answers: params[:ans]
+    })
 
     respond_to do |format|
       if @response.save
-        format.html { redirect_to @response, notice: 'Response was successfully created.' }
+        format.html { redirect_to group_form_response_path(@group, @form, @response), notice: 'Response was successfully created.' }
         format.json { render :show, status: :created, location: @response }
       else
         format.html { render :new }
@@ -64,6 +72,11 @@ class ResponsesController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
+    def set_parents
+      @group = Group.find params[:group_id]
+      @form  = Form.find params[:form_id]
+    end
+
     def set_response
       @response = Response.find(params[:id])
     end
