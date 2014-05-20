@@ -1,4 +1,5 @@
 class FormsController < ApplicationController
+  before_action :set_group
   before_action :set_form, only: [:show, :edit, :update, :destroy]
 
   # GET /forms
@@ -13,8 +14,6 @@ class FormsController < ApplicationController
   # GET /forms/new
   def new
     @form = Form.new
-    @form.group_id = params[:group_id]
-    @form.owner_id = session[:user_id]
   end
 
   # GET /forms/1/edit
@@ -24,24 +23,24 @@ class FormsController < ApplicationController
   # POST /forms
   def create
     @form = Form.new(form_params)
-    @form.group_id = params[:group_id]
-    @form.owner_id = @form.group.owner_id
+    @form.group = @group
+    @form.owner = current_user
 
-    unless @form.group.moderators.find(current_user)
+    unless can_edit?
       redirect_to group_url(@form.group), notice: "I'm sorry Dave, I can't let you do that."
     end
-      
+
     if @form.save
       redirect_to [@form.group,@form], notice: 'Form was successfully created.'
     else
       render :new
-    end    
+    end
   end
 
   # PATCH/PUT /forms/1
   def update
     if @form.update(form_params)
-      redirect_to [@form.group,@form], notice: 'Form was successfully updated.'
+      redirect_to [@group, @form], notice: 'Form was successfully updated.'
     else
       render :edit
     end
@@ -49,15 +48,16 @@ class FormsController < ApplicationController
 
   # DELETE /forms/1
   def destroy
-
-    @group = @form.group
     @form.destroy
     redirect_to group_url(@group), notice: 'Form was successfully destroyed.'
-
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
+    def set_group
+      @group = Group.find(params[:group_id])
+    end
+
     def set_form
       @form = Form.find(params[:id])
     end

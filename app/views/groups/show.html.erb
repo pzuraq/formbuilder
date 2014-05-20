@@ -1,68 +1,34 @@
-<h1><%= @group.name %></h1>
-<% if (@group.moderators.include? current_user) or (@group.editors.include? current_user) %>
-  <strong><%= link_to 'Edit', edit_group_path(@group) %></strong>
+<h2><%= @group.name %></h2>
+
+<% if @group.parent %>
+  <%= link_to 'Back', group_path(@group.parent), class: 'btn btn-sm btn-default' %>
+<% elsif not logged_in? %>
+  <%= link_to 'Back', groups_path, class: 'btn btn-sm btn-default' %>
 <% end %>
-<br /><br />
 
-<table>
-  <thead>
-    <tr>
-      <th>Subgroups:</th>
+<% if can_edit? %>
+  <%= link_to 'New Subgroup', new_group_path(:parent_id => @group.id), class: 'btn btn-sm btn-default' %>
+  <%= link_to 'New Form', new_group_form_path(:group_id => @group.id), class: 'btn btn-sm btn-default' %>
 
-      <th colspan="3"></th>
-    </tr>
-  </thead>
+  <%= link_to 'Edit Group', edit_group_path(@group), class: 'btn btn-sm btn-default pull-right' %>
+<% end %>
 
-  <tbody>
-    <% @groups.each do |group| %>
-      <tr>
-        <td><%= group.name %></td>
-        <td><%= link_to 'Show', group_path(group) %></td>
-        <% if (@group.moderators.include? current_user) or (@group.editors.include? current_user) %>
-          <td><%= link_to 'Destroy', group, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-        <% end %>
-      </tr>
+
+<div class="list-group top7">
+  <% @group.subgroups.each do |group| %>
+    <%= link_to group, class: "list-group-item" do %>
+      <span class="lead">
+        <span class="glyphicon glyphicon-folder-close"></span>
+        <%= group.name %>
+      </span>
     <% end %>
-  </tbody>
-</table>
-<br>
-<% if (@group.moderators.include? current_user) or (@group.editors.include? current_user) %>
-  <%= link_to 'New Subgroup', new_group_path(:parent_id => @group.id) %>
-<% end %>
-<br>
-<p>================================</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>Forms:</th>
-
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @forms.each do |form| %>
-      <tr>
-        <td><%= form.name %></td>
-        <td><%= link_to 'Respond', new_group_form_response_path(:group_id => @group.id, :form_id => form.id) %></td>
-        <% if (@group.moderators.include? current_user) or (@group.editors.include? current_user) %>
-          <td><%= link_to 'Edit', edit_group_form_path(:id => form.id, :group_id => @group.id) %></td>
-          <td><%= link_to 'Destroy', group_form_path(:group_id => @group.id, :id => form.id), method: :delete, data: { confirm: 'Are you sure?' } %></td>
-        <% end %>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-<br>
-<% if (@group.moderators.include? current_user) or (@group.editors.include? current_user) %>
-  <%= link_to 'New Form', new_group_form_path(:group_id => @group.id) %>
-<% end %>
-<p>================================</p>
-<% if @group.parent_id? %>
-	<%= link_to('Back', :action => 'show', :id => @group.parent_id) %>
-<% else %>
-  <% unless logged_in? %>
-    <%= link_to('Back', :action => 'index') %>
   <% end %>
-<% end %>
+  <% @group.forms.each do |form| %>
+    <%= link_to group_form_path(@group, form), class: "list-group-item" do %>
+      <span class="lead">
+        <span class="glyphicon glyphicon-list-alt"></span>
+        <%= form.name %>
+      </span>
+    <% end %>
+  <% end %>
+</div>

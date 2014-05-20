@@ -1,7 +1,8 @@
 class Group < ActiveRecord::Base
 	belongs_to :owner, :class_name => 'User'
 	belongs_to :parent, :class_name => 'Group'
-	has_many :forms
+	has_many :forms, -> { order name: :asc }
+	has_many :subgroups, -> { order name: :asc }, foreign_key: :parent_id, :class_name => 'Group'
   has_many :permissions
 	has_many :users, through: :permissions
   has_many :moderator_permissions, -> { where role: 'moderator' }, :class_name => 'Permission'

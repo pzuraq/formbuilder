@@ -13,7 +13,7 @@
 //= require jquery/dist/jquery
 //= require jquery-ujs/src/rails
 //= require turbolinks
-//= require bootstrap/dist/js/bootstrap
+//= require bootstrap
 //= require knockout/dist/knockout
 //= require knockout-validation/Dist/knockout.validation
 //= require_tree .

@@ -16,8 +16,6 @@ class GroupsController < ApplicationController
 
   # GET /groups/1
   def show
-    @groups = Group.where(:parent_id => params[:id])
-    @forms = Form.where(:group_id => params[:id])
   end
 
   # GET /groups/new
