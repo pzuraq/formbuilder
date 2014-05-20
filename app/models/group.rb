@@ -1,4 +1,5 @@
 class Group < ActiveRecord::Base
+  
 	belongs_to :owner, :class_name => 'User'
 	belongs_to :parent, :class_name => 'Group'
 	has_many :forms
@@ -9,10 +10,4 @@ class Group < ActiveRecord::Base
   has_many :editor_permissions, -> { where role: 'editor' }, :class_name => 'Permission'
   has_many :editors, source: :user, through: :editor_permissions
 
-
-  after_create :create_permission
-
-  def create_permission
-    Permission.create(user: self.owner, group: self, role: 'moderator', inherited: false)
-  end
 end

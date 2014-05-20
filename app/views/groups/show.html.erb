@@ -1,5 +1,5 @@
 <h1><%= @group.name %></h1>
-<% if (@group.moderators.include? current_user) or (@group.editors.include? current_user) %>
+<% if (@group.moderators.include? current_user) or (@group.editors.include? current_user) or current_user == @group.owner %>
   <strong><%= link_to 'Edit', edit_group_path(@group) %></strong>
 <% end %>
 <br /><br />
@@ -18,7 +18,7 @@
       <tr>
         <td><%= group.name %></td>
         <td><%= link_to 'Show', group_path(group) %></td>
-        <% if (@group.moderators.include? current_user) or (@group.editors.include? current_user) %>
+        <% if (@group.moderators.include? current_user) or (@group.editors.include? current_user)  or current_user == @group.owner %>
           <td><%= link_to 'Destroy', group, method: :delete, data: { confirm: 'Are you sure?' } %></td>
         <% end %>
       </tr>
@@ -26,7 +26,7 @@
   </tbody>
 </table>
 <br>
-<% if (@group.moderators.include? current_user) or (@group.editors.include? current_user) %>
+<% if (@group.moderators.include? current_user) or (@group.editors.include? current_user) or current_user == @group.owner%>
   <%= link_to 'New Subgroup', new_group_path(:parent_id => @group.id) %>
 <% end %>
 <br>
@@ -55,7 +55,7 @@
   </tbody>
 </table>
 <br>
-<% if (@group.moderators.include? current_user) or (@group.editors.include? current_user) %>
+<% if (@group.moderators.include? current_user) or (@group.editors.include? current_user) or current_user == @group.owner%>
   <%= link_to 'New Form', new_group_form_path(:group_id => @group.id) %>
 <% end %>
 <p>================================</p>
