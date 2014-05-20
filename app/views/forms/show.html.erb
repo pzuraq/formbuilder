@@ -22,7 +22,7 @@
   <strong>Render options:</strong>
   <%= @form.render_options %>
 </p>
-<% if (@group.moderators.include? current_user) or (@group.editors.include? current_user) %>
+<% if (@group.moderators.include? current_user) or (@group.editors.include? current_user) or current_user == @group.owner %>
   <%= link_to 'Edit', edit_group_form_path(:id => @form.id) %> |
 <% end %>
 <%= link_to('Back', group_path(:id => @form.group_id)) %>

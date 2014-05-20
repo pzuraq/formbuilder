@@ -1,5 +1,81 @@
 <h1>Editing group</h1>
 
-<%= render 'form' %>
+<%= form_for(@group) do |f| %>
+  <% if @group.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@group.errors.count, "error") %> prohibited this group from being saved:</h2>
+
+      <ul>
+      <% @group.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="field">
+    <%= f.label "Group Name:" %><br>
+    <%= f.text_field :name %>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Moderators:</th>
+
+        <th colspan="3"></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @moderators.each do |moderator| %>
+        <tr>
+          <td><%= moderator.username %></td>
+          <% if (@moderators.include? current_user) or current_user == @group.owner %>
+            <td><%= link_to 'Remove', group_path(:remove_id => moderator.id), method: :delete_permission, data: { confirm: 'Are you sure?' } %></td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <br>
+  <% if (@group.moderators.include? current_user) or current_user == @group.owner %>
+    <%= select_tag(:new_moderator_id, options_for_select(@options), :include_blank => true) %>
+    <%# <%= link_to 'New Moderator (TODO)', new_group_form_path(:moderator_id => @group.id) %>
+  <% end %>
+  <p>================================</p>
+  <br />
+  <table>
+    <thead>
+      <tr>
+        <th>Editors:</th>
+
+        <th colspan="3"></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @editors.each do |editor| %>
+        <tr>
+          <td><%= editor.username %></td>
+          <% if (@moderators.include? current_user) or current_user == @group.owner %>
+            <td><%= link_to 'Remove', group_path(:remove_id => editor.id), method: :delete_permission, data: { confirm: 'Are you sure?' } %></td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <br>
+  <% if (@moderators.include? current_user) or current_user == @group.owner %>
+    <%= select_tag(:new_editor_id, options_for_select(@options), :include_blank => true) %>
+    <%# link_to 'New Editor (TODO)', new_group_path(:parent_id => @group.id) %>
+  <% end %>
+  <br>
+  <p>================================</p>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
+
 
 <%= link_to 'Back', group_path(@group.id) %>

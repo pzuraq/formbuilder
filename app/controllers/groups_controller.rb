@@ -29,6 +29,12 @@ class GroupsController < ApplicationController
 
   # GET /groups/1/edit
   def edit
+    @moderators = @group.moderators
+    @editors = @group.editors
+    @users = User.all
+    @users = @users.reject{ |r| @moderators.include? r }
+    @users = @users.reject{ |r| @editors.include? r }
+    @options = @users.map{ |u| [u.username, u.id] }
   end
 
   # POST /groups
@@ -45,6 +51,11 @@ class GroupsController < ApplicationController
 
   # PATCH/PUT /groups/1
   def update
+    if (current_user == @group.owner)
+      if !params[:new_editor_id].blank? then @group.permissions.create(:user_id => params[:new_editor_id], :group_id => @group.id, :role => 'editor') end
+      if !params[:new_moderator_id].blank? then @group.permissions.create(:user_id => params[:new_moderator_id], :group_id => @group.id, :role => 'moderator') end
+    end
+
     if @group.update(group_params)
       redirect_to @group, notice: 'Group was successfully updated.'
     else
@@ -58,6 +69,12 @@ class GroupsController < ApplicationController
     redirect_to groups_url, notice: 'Group was successfully destroyed.'
   end
 
+  def delete_permission
+    @user = User.find(params[:remove_id])
+    @permission = @group.moderator_permissions.where(:user => @user).destroy
+    render :edit
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_group
@@ -66,6 +83,6 @@ class GroupsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def group_params
-      params.require(:group).permit(:owner_id, :parent_id, :name)
+      params.require(:group).permit(:owner_id, :parent_id, :name, :permissions)
     end
 end
