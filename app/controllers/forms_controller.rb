@@ -14,7 +14,7 @@ class FormsController < ApplicationController
   def new
     @form = Form.new
     @form.group_id = params[:group_id]
-    @form.user_id = session[:user_id]
+    @form.owner_id = session[:user_id]
   end
 
   # GET /forms/1/edit
@@ -25,7 +25,7 @@ class FormsController < ApplicationController
   def create
     @form = Form.new(form_params)
     @form.group_id = params[:group_id]
-    @form.user_id = session[:user_id]
+    @form.owner_id = @form.group.owner_id
 
     unless @form.group.moderators.find(current_user)
       redirect_to group_url(@form.group), notice: "I'm sorry Dave, I can't let you do that."
@@ -64,6 +64,6 @@ class FormsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def form_params
-      params.require(:form).permit(:user_id, :group_id, :name, :template, :render_options)
+      params.require(:form).permit(:owner_id, :group_id, :name, :template, :render_options)
     end
 end

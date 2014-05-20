@@ -1,29 +1,30 @@
 class GroupsController < ApplicationController
   before_action :set_group, only: [:show, :edit, :update, :destroy]
-  before_filter :require_login, except: [:index]
+  skip_before_filter :require_login, except: [:index, :show]
 
   # GET /groups
   def index
-    if session[:user_id]
+    if logged_in?
       # The user's personal group (user_group) is the only group with both their ID, and a null group_id
-      @user_group = Group.where(:user_id => session[:user_id], :group_id => [false, nil]).first! # First ensures a single record
+      @user_group = Group.where(:owner_id => session[:user_id], :parent_id => [false, nil]).first! # First ensures a single record
       redirect_to :action => 'show', :id => @user_group.id
     else
-      redirect_to :login
+      # If a user is not logged in, the Group index will show all user's personal groups.
+      @top_level_groups = Group.where(:parent_id => [false, nil])
     end
   end
 
   # GET /groups/1
   def show
-    @groups = Group.where(:group_id => params[:id])
+    @groups = Group.where(:parent_id => params[:id])
     @forms = Form.where(:group_id => params[:id])
   end
 
   # GET /groups/new
   def new
     @group = Group.new
-    @group.group_id = params[:group_id]
-    @group.user_id = session[:user_id]
+    @group.parent_id = params[:parent_id]
+    @group.owner = @group.parent.owner
   end
 
   # GET /groups/1/edit
@@ -33,8 +34,8 @@ class GroupsController < ApplicationController
   # POST /groups
   def create
     @group = Group.new(group_params)
-    @group.group_id = params[:group_id]
-    @group.user_id = session[:user_id]
+    @group.parent_id = params[:parent_id]
+    @group.owner = @group.parent.owner
     if @group.save
       redirect_to @group, notice: 'Group was successfully created.'
     else
@@ -65,6 +66,6 @@ class GroupsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def group_params
-      params.require(:group).permit(:user_id, :group_id, :name)
+      params.require(:group).permit(:owner_id, :parent_id, :name)
     end
 end

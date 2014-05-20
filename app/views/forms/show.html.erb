@@ -1,6 +1,6 @@
 <p>
-  <strong>User:</strong>
-  <%= @form.user_id %>
+  <strong>Owner:</strong>
+  <%= @form.owner_id %>
 </p>
 
 <p>
@@ -22,8 +22,8 @@
   <strong>Render options:</strong>
   <%= @form.render_options %>
 </p>
-
-<%= link_to 'Edit', edit_group_form_path(:id => @form.id) %> |
-
+<% if (@group.moderators.include? current_user) or (@group.editors.include? current_user) %>
+  <%= link_to 'Edit', edit_group_form_path(:id => @form.id) %> |
+<% end %>
 <%= link_to('Back', group_path(:id => @form.group_id)) %>
 

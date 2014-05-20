@@ -1,7 +1,7 @@
 class CreateForms < ActiveRecord::Migration
   def change
     create_table :forms do |t|
-      t.integer :user_id
+      t.integer :owner_id
       t.integer :group_id
       t.string :name
       t.text :template

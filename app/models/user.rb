@@ -12,7 +12,7 @@ class User < ActiveRecord::Base
   has_many :groups, through: :permissions
 
   def create_group
-    Group.create(user: self, name: self.username+"'s group")
+    Group.create(owner: self, name: self.username)
   end
   
 end
