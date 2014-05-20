@@ -9,7 +9,6 @@
 <% if can_edit? %>
   <%= link_to 'New Subgroup', new_group_path(:parent_id => @group.id), class: 'btn btn-sm btn-default' %>
   <%= link_to 'New Form', new_group_form_path(:group_id => @group.id), class: 'btn btn-sm btn-default' %>
-
   <%= link_to 'Edit Group', edit_group_path(@group), class: 'btn btn-sm btn-default pull-right' %>
 <% end %>
 
