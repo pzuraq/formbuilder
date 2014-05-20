@@ -7,23 +7,44 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
-  <div id="nav">
-    <% if current_user %>
-      <%= link_to "Edit Profile", edit_user_path(current_user.id) %>
-      <%= link_to "Logout", :logout, method: :post %>
-    <% else %>
-      <%= link_to "Register", new_user_path %> |
-      <%= link_to "Login", :login %>
-    <% end %>
-  </div>
-  <div>
-    <p id="notice"><%= flash[:notice] %></p>
-    <p id="alert"><%= flash[:alert] %></p>
-  </div>
+  <nav class="navbar navbar-default navbar-static-top" role="navigation">
+    <div class="container">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <%= link_to "formbuilder", root_path, class: "navbar-brand" %>
+      </div>
+
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <%= link_to_li "Groups", groups_path %>
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right">
+          <% if current_user %>
+            <%= link_to_li "Edit Profile", edit_user_path(current_user.id) %>
+            <%= link_to_li "Logout", :logout, method: :post %>
+          <% else %>
+            <%= link_to_li "Register", new_user_path %>
+            <%= link_to_li "Login", :login %>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
   <div class="container">
     <%= yield %>
   </div>
 
+  <div>
+    <p id="notice"><%= flash[:notice] %></p>
+    <p id="alert"><%= flash[:alert] %></p>
+  </div>
 </body>
 </html>
