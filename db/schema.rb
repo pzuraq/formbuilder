@@ -18,7 +18,7 @@ ActiveRecord::Schema.define(version: 20140519215918) do
   enable_extension "hstore"
 
   create_table "forms", force: true do |t|
-    t.integer  "user_id"
+    t.integer  "owner_id"
     t.integer  "group_id"
     t.string   "name"
     t.text     "template"
@@ -28,8 +28,8 @@ ActiveRecord::Schema.define(version: 20140519215918) do
   end
 
   create_table "groups", force: true do |t|
-    t.integer  "user_id"
-    t.integer  "group_id"
+    t.integer  "owner_id"
+    t.integer  "parent_id"
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -45,7 +45,7 @@ ActiveRecord::Schema.define(version: 20140519215918) do
   add_index "permissions", ["group_id", "user_id"], name: "index_permissions_on_group_id_and_user_id", unique: true, using: :btree
 
   create_table "responses", force: true do |t|
-    t.integer  "user_id"
+    t.integer  "respondent_id"
     t.hstore   "answers"
     t.integer  "form_id"
     t.datetime "created_at"
