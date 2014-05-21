@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(version: 20140519215918) do
     t.integer  "owner_id"
     t.integer  "parent_id"
     t.string   "name"
+    t.hstore   "supergroups"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -39,7 +40,6 @@ ActiveRecord::Schema.define(version: 20140519215918) do
     t.integer "group_id"
     t.integer "user_id"
     t.string  "role"
-    t.boolean "inherited"
   end
 
   add_index "permissions", ["group_id", "user_id"], name: "index_permissions_on_group_id_and_user_id", unique: true, using: :btree

@@ -31,7 +31,7 @@
         <tr>
           <td><%= moderator.username %></td>
           <% if (@moderators.include? current_user) or current_user == @group.owner %>
-            <td><%= link_to 'Remove', group_path(:remove_id => moderator.id), method: :delete_permission, data: { confirm: 'Are you sure?' } %></td>
+            <td><%= link_to 'Remove', remove_permission_group_path(:remove_id => moderator.id), method: :delete_permission, data: { confirm: 'Are you sure?' } %></td>
           <% end %>
         </tr>
       <% end %>
@@ -58,7 +58,7 @@
         <tr>
           <td><%= editor.username %></td>
           <% if (@moderators.include? current_user) or current_user == @group.owner %>
-            <td><%= link_to 'Remove', group_path(:remove_id => editor.id), method: :delete_permission, data: { confirm: 'Are you sure?' } %></td>
+            <td><%= link_to 'Remove', remove_permission_group_path(:remove_id => editor.id, :group_id => @group.id), method: :delete_permission, data: { confirm: 'Are you sure?' } %></td>
           <% end %>
         </tr>
       <% end %>

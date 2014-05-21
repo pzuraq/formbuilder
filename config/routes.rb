@@ -3,6 +3,9 @@ Rails.application.routes.draw do
   resources :user_sessions
   resources :users
   resources :groups do
+    member do
+      post :remove_permission
+    end
     resources :forms do
       resources :responses
     end

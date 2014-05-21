@@ -4,6 +4,7 @@ class CreateGroups < ActiveRecord::Migration
       t.integer :owner_id
       t.integer :parent_id
       t.string :name
+      t.hstore :supergroups
 
       t.timestamps
     end
