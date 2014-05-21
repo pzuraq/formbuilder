@@ -1,3 +1,8 @@
+<%= link_to group_form_path(@group, @form), class: "btn btn-sm btn-default" do %>
+  <span class="glyphicon glyphicon-chevron-left"></span>
+  Back
+<% end %>
+
 <h1><%= @form.name %></h1>
 
 <%= form_for [@group, @form, @response], html: {class: 'form'} do |f| %>
@@ -15,10 +20,7 @@
 
   <%= @compiled %>
 
-  <div class="actions">
-    <%= f.submit %>
+  <div class="actions" data-bind="fadeVisible:display">
+    <%= button_tag 'Submit', class: "btn btn-sm btn-default" %>
   </div>
 <% end %>
-
-
-<%= link_to 'Back', group_path(@group) %>

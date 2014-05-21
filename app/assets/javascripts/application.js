@@ -12,6 +12,7 @@
 //
 //= require jquery/dist/jquery
 //= require jquery-ujs/src/rails
+//= require textarea-autosize/dist/jquery.textarea_auto_expand
 //= require turbolinks
 //= require bootstrap
 //= require knockout/dist/knockout
@@ -114,8 +115,6 @@ function section(index, parent, selector) {
 		var property = $(this).attr('name').replace(/ans\[|\]/g,''),
 		    validations = $(this).data('validations');
 
-		console.log(property)
-
 		if(!self[property]) {
 			self[property] = ko.observable();
 
@@ -157,10 +156,37 @@ function section(index, parent, selector) {
 }
 
 
-$(function () {
-  $('.form').children('.section').each(function(index) {
-    viewModel[$(this).attr('id')] = ko.validatedObservable(new section(index, viewModel, $(this)));
-  })
+$(document).on('page:change', function () {
+	if($('.form').length > 0) {
+		viewModel = function() {
+		  var self = this;
 
-  ko.applyBindings(viewModel);
+			$('.form').children('.section').each(function(index) {
+		    self[$(this).attr('id')] = ko.validatedObservable(new section(index, self, $(this)));
+		  });
+
+
+			self.errors = ko.validation.group(self);
+			self.isValid = ko.computed(function () {
+				return self.errors().length === 0;
+			});
+
+			self.display = ko.computed(function() {
+				return self.isValid();
+			});
+		};
+
+		ko.applyBindings(new viewModel());
+	}
+
+	$('#edit').click(function() {
+		$('.lock').addClass('hide');
+		$('.edit').removeClass('hide');
+		$('textarea.code').textareaAutoExpand();
+	});
+
+	$('#edit-cancel').click(function() {
+		$('.lock').removeClass('hide');
+		$('.edit').addClass('hide');
+	});
 });

@@ -1,29 +1,59 @@
-<p>
-  <strong>Owner:</strong>
-  <%= @form.owner_id %>
-</p>
+<%= form_for [@group, @form], html: { class: 'form-horizontal' } do |f| %>
+  <%= link_to @group, class: 'btn btn-sm btn-default' do %>
+    <span class="glyphicon glyphicon-chevron-left"></span>
+    Back
+  <% end %>
 
-<p>
-  <strong>Group:</strong>
-  <%= @form.group_id %>
-</p>
+  <% if can_edit? %>
+    <div class="actions lock pull-right">
+      <%= link_to 'Respond', new_group_form_response_path(@group, @form), class: 'btn btn-sm btn-default' %>
 
-<p>
-  <strong>Name:</strong>
-  <%= @form.name %>
-</p>
+      <%= button_tag type: 'button', id: 'edit', class: 'btn btn-sm btn-default' do %>
+        <span class="glyphicon glyphicon-edit"></span>
+        Edit
+      <% end %>
+    </div>
 
-<p>
-  <strong>Template:</strong>
-  <%= @form.template %>
-</p>
+    <div class="actions edit hide pull-right">
+      <%= button_tag type: 'button', id:'edit-cancel', class: 'btn btn-sm btn-default ' do %>
+        <span class="glyphicon glyphicon-ban-circle"></span>
+        Cancel
+      <% end %>
+      <%= button_tag class: 'btn btn-sm btn-default' do %>
+        <span class="glyphicon glyphicon-save"></span>
+        Save
+      <% end %>
+    </div>
+  <% end %>
 
-<p>
-  <strong>Render options:</strong>
-  <%= @form.render_options %>
-</p>
-<% if (@group.moderators.include? current_user) or (@group.editors.include? current_user) or current_user == @group.owner %>
-  <%= link_to 'Edit', edit_group_form_path(:id => @form.id) %> |
+  <% if @form.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@form.errors.count, "error") %> prohibited this form from being saved:</h2>
+
+      <ul>
+      <% @form.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="panel panel-default top7">
+    <div class="panel-heading">
+      <div class="lock">
+        <h1 class="panel-title"><%= @form.name %></h1>
+      </div>
+      <div class="has-feedback edit hide">
+        <%= f.text_field :name, class: 'form-control' %>
+        <span class="glyphicon glyphicon-edit form-control-feedback"></span>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div class="lock">
+        <pre><%= @form.template %></pre>
+      </div>
+      <div class="edit hide">
+        <%= f.text_area :template, class: 'form-control code' %>
+      </div>
+    </div>
+  </div>
 <% end %>
-<%= link_to('Back', group_path(:id => @form.group_id)) %>
-

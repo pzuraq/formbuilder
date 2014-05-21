@@ -1,40 +1,51 @@
-<h2><%= @group.name %></h2>
-
 <% if @group.parent %>
-  <%= link_to 'Back', group_path(@group.parent), class: 'btn btn-sm btn-default' %>
+  <%= link_to group_path(@group.parent), class: 'btn btn-sm btn-default' do %>
+    <span class="glyphicon glyphicon-chevron-left"></span>
+    Back
+  <% end %>
 <% elsif not logged_in? %>
-  <%= link_to 'Back', groups_path, class: 'btn btn-sm btn-default' %>
+  <%= link_to groups_path, class: 'btn btn-sm btn-default' do %>
+    <span class="glyphicon glyphicon-chevron-left"></span>
+    Back
+  <% end %>
 <% end %>
 
 <% if can_edit? %>
-  <%= link_to 'New Subgroup', new_group_path(:parent_id => @group.id), class: 'btn btn-sm btn-default' %>
-  <%= link_to 'New Form', new_group_form_path(:group_id => @group.id), class: 'btn btn-sm btn-default' %>
-  <%= link_to 'Edit Group', edit_group_path(@group), class: 'btn btn-sm btn-default pull-right' %>
+  <%= link_to new_group_path(:parent_id => @group.id), class: 'btn btn-sm btn-default' do %>
+    <span class="glyphicon glyphicon-plus"></span>
+    Add Subgroup
+  <% end %>
+  <%= link_to new_group_form_path(@group.id), class: 'btn btn-sm btn-default' do %>
+    <span class="glyphicon glyphicon-plus"></span>
+    Add Form
+  <% end %>
+
+  <%= link_to edit_group_path(@group), class: 'btn btn-sm btn-default pull-right' do %>
+    <span class="glyphicon glyphicon-cog"></span>
+    Settings
+  <% end %>
 <% end %>
 
-<div class="list-group top7">
-  <% @group.subgroups.each do |group| %>
-    <%= link_to group, class: "list-group-item" do %>
-      <span class="lead">
-        <span class="glyphicon glyphicon-folder-close"></span>
-        <%= group.name %>
-      </span>
+<div class="panel panel-default top7">
+  <div class="panel-heading">
+    <h1 class="panel-title"><%= @group.name %></h1>
+  </div>
+  <div class="panel-body list-group">
+    <% @group.subgroups.each do |group| %>
+      <%= link_to group, class: "list-group-item" do %>
+        <span class="lead">
+          <span class="glyphicon glyphicon-folder-close"></span>
+          <%= group.name %>
+        </span>
+      <% end %>
     <% end %>
-  <% end %>
-  <% @group.forms.each do |form| %>
-    <%= link_to group_form_path(@group, form), class: "list-group-item" do %>
-      <span class="lead">
-        <span class="glyphicon glyphicon-list-alt"></span>
-        <%= form.name %>
-      </span>
+    <% @group.forms.each do |form| %>
+      <%= link_to group_form_path(@group, form), class: "list-group-item" do %>
+        <span class="lead">
+          <span class="glyphicon glyphicon-list-alt"></span>
+          <%= form.name %>
+        </span>
+      <% end %>
     <% end %>
-  <% end %>
+  </div>
 </div>
-
-<% if is_moderator? %>
-  I'm a moderator!!
-<% end %>
-
-<% if is_editor? %>
-  I'm a editor!!
-<% end %>
