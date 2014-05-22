@@ -7,15 +7,19 @@ module ApplicationHelper
   end
 
   def is_moderator?
-    @group.try(:moderators).try(:include?, current_user)
+    if supergroups = @group.try(:supergroups)
+      current_user.moderates.where(group_id: supergroups.keys.push(@group.id)).first
+    end
   end
 
   def is_editor?
-    @group.try(:editors).try(:include?, current_user)
+  if supergroups = @group.try(:supergroups)
+      current_user.edits.where(group_id: supergroups.keys.push(@group.id)).first
+    end
   end
 
   def is_super?
-    @group.try(:owner) == current_user
+    current_user == @group.try(:owner)
   end
 
   def can_edit?
