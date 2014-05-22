@@ -11,8 +11,11 @@ class User < ActiveRecord::Base
   has_many :permissions
   has_many :groups, through: :permissions
 
+  has_many :moderates, -> { where role: "moderator" }, class_name: 'Permission'
+  has_many :edits, -> { where role: "editor" }, class_name: 'Permission'
+
   def create_group
     Group.create(owner: self, name: self.username)
   end
-  
+
 end

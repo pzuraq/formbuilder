@@ -1,5 +1,5 @@
 class Group < ActiveRecord::Base
-  
+
 	belongs_to :owner, :class_name => 'User'
 	belongs_to :parent, :class_name => 'Group'
 	has_many :forms, -> { order name: :asc }
@@ -11,4 +11,15 @@ class Group < ActiveRecord::Base
   has_many :editor_permissions, -> { where role: 'editor' }, :class_name => 'Permission'
   has_many :editors, source: :user, through: :editor_permissions
 
+	before_create :set_supergroups
+
+	def set_supergroups
+		if parent
+			group_index = parent.supergroups.max_by{ |k,v| v }.try(:last) || 0
+
+			self.supergroups = parent.supergroups.merge({ "#{parent_id}" => group_index.to_i + 1 })
+		else
+			self.supergroups = {}
+		end
+	end
 end
