@@ -45,8 +45,8 @@ class GroupsController < ApplicationController
   # PATCH/PUT /groups/1
   def update
     if (current_user == @group.owner)
-      if !params[:new_editor_id].blank? then @group.permissions.create(:user_id => params[:new_editor_id], :group_id => @group.id, :role => 'editor') end
-      if !params[:new_moderator_id].blank? then @group.permissions.create(:user_id => params[:new_moderator_id], :group_id => @group.id, :role => 'moderator') end
+      if !params[:new_editor_id].blank? then @group.permissions.create(:user_id => params[:new_editor_id], :group_id => @group.id, :role_rank => 1) end
+      if !params[:new_moderator_id].blank? then @group.permissions.create(:user_id => params[:new_moderator_id], :group_id => @group.id, :role_rank => 0) end
     end
     get_permission_variables
     if @group.update(group_params)

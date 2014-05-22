@@ -39,7 +39,7 @@ ActiveRecord::Schema.define(version: 20140519215918) do
   create_table "permissions", force: true do |t|
     t.integer "group_id"
     t.integer "user_id"
-    t.string  "role"
+    t.integer "role_rank"
   end
 
   add_index "permissions", ["group_id", "user_id"], name: "index_permissions_on_group_id_and_user_id", unique: true, using: :btree

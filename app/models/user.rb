@@ -6,14 +6,16 @@ class User < ActiveRecord::Base
   validates :password_confirmation, presence: true
 
   validates :username, uniqueness: true
-  after_create :create_group
 
   has_many :permissions
   has_many :groups, through: :permissions
 
-  has_many :moderates, -> { where role: "moderator" }, class_name: 'Permission'
-  has_many :edits, -> { where role: "editor" }, class_name: 'Permission'
+  has_many :moderates, -> { where role_rank: 0 }, class_name: 'Permission'
+  has_many :edits, -> { where role_rank: 1 }, class_name: 'Permission'
+  has_many :views, -> { where role_rank: 2 }, class_name: 'Permission'
 
+  after_create :create_group
+  
   def create_group
     Group.create(owner: self, name: self.username)
   end
