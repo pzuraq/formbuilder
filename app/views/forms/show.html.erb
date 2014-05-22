@@ -4,17 +4,19 @@
     Back
   <% end %>
 
-  <% if can_edit? %>
-    <div class="actions lock pull-right">
-      <%= link_to 'Respond', new_group_form_response_path(@group, @form), class: 'btn btn-sm btn-default' %>
+  <div class="actions lock pull-right">
+    <%= link_to 'Respond', new_group_form_response_path(@group, @form), class: 'btn btn-sm btn-default' %>
 
+    <% if can_edit? %>
       <%= button_tag type: 'button', id: 'edit', class: 'btn btn-sm btn-default' do %>
         <span class="glyphicon glyphicon-edit"></span>
         Edit
       <% end %>
-    </div>
+    <% end %>
+  </div>
 
-    <div class="actions edit hide pull-right">
+  <div class="actions edit hide pull-right">
+    <% if can_edit? %>
       <%= button_tag type: 'button', id:'edit-cancel', class: 'btn btn-sm btn-default ' do %>
         <span class="glyphicon glyphicon-ban-circle"></span>
         Cancel
@@ -23,8 +25,8 @@
         <span class="glyphicon glyphicon-save"></span>
         Save
       <% end %>
-    </div>
-  <% end %>
+    <% end %>
+  </div>
 
   <% if @form.errors.any? %>
     <div id="error_explanation">
