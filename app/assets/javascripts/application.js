@@ -65,12 +65,15 @@ function branch(parent, selector) {
 
 	self.parent = parent;
 	self.required = ko.observable(false);
-	self.branchConditions = selector.data('branch').split('+');
+	self.branchParts = selector.data('branch').split('|');
 	self.display = ko.observable(false);
 	self.sections = [];
 
-	for (condition in self.branchConditions) {
-		self.branchConditions[condition] = self.branchConditions[condition].split('=');
+	for (part in self.branchParts) {
+		self.branchParts[part] = self.branchParts[part].split('+');
+		for (condition in self.branchParts[part]) {
+			self.branchParts[part][condition] = self.branchParts[part][condition].split('=');
+		}
 	}
 
 	selector.children('.section').each(function(index) {
@@ -81,16 +84,17 @@ function branch(parent, selector) {
 	});
 
 	self.setRequired = ko.computed(function() {
-		var isRequired = true;
+		for (part in self.branchParts) {
+			var isRequired = true;
+			for (condition in self.branchParts[part]) {
+				var question = self.branchParts[part][condition][0],
+						answer   = self.branchParts[part][condition][1];
+				console.log("branchpart: ", self.branchParts[part]);
+				isRequired = isRequired && self.parent[question]() == answer;
+			}
 
-		for (condition in self.branchConditions) {
-			var question = self.branchConditions[condition][0],
-					answer   = self.branchConditions[condition][1];
-
-			isRequired = isRequired && self.parent[question]() == answer;
+			self.required(isRequired);
 		}
-
-		self.required(isRequired);
 	});
 
 	self.clearBranch = ko.computed(function() {

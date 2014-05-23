@@ -36,6 +36,8 @@ ActiveRecord::Schema.define(version: 20140519215918) do
     t.datetime "updated_at"
   end
 
+  add_index "groups", ["supergroups"], name: "groups_gin_supergroups", using: :gin
+
   create_table "permissions", force: true do |t|
     t.integer "group_id"
     t.integer "user_id"

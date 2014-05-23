@@ -6,9 +6,8 @@ class CreateGroups < ActiveRecord::Migration
       t.string :name
       t.hstore :supergroups
 
-      execute "CREATE INDEX groups_gin_supergroups ON groups USING GIN(supergroups)"
-
       t.timestamps
     end
+    execute "CREATE INDEX groups_gin_supergroups ON groups USING GIN(supergroups)"
   end
 end
