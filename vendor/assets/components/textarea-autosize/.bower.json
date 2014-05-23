@@ -1,0 +1,36 @@
+{
+  "name": "textarea-auto-expand",
+  "version": "0.1.0",
+  "homepage": "http://javierjulio.github.io/textarea-auto-expand/",
+  "authors": [
+    "Javier Julio <jjfutbol@gmail.com>"
+  ],
+  "description": "Vertically adjust a textarea based on user input without needing a clone or ghost element.",
+  "main": "dist/jquery.textarea_auto_expand.js",
+  "keywords": [
+    "textarea",
+    "expand",
+    "grow",
+    "vertical",
+    "autoexpand",
+    "autogrow"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "_release": "0.1.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.1.0",
+    "commit": "e2e0aaeccd5bd0484f7f0eeb42b9dde0533a25b9"
+  },
+  "_source": "git://github.com/javierjulio/textarea-autosize.git",
+  "_target": "~0.1.0",
+  "_originalSource": "textarea-autosize",
+  "_direct": true
+}
