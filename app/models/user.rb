@@ -9,6 +9,7 @@ class User < ActiveRecord::Base
 
   has_many :permissions
   has_many :groups, through: :permissions
+  has_many :responses
 
   has_many :moderates, -> { where role_rank: 0 }, class_name: 'Permission'
   has_many :edits, -> { where role_rank: 1 }, class_name: 'Permission'

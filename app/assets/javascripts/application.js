@@ -53,7 +53,8 @@ ko.bindingHandlers.fadeVisible = {
     // Whenever the value subsequently changes, slowly fade the element in or out
     var value = ko.unwrap(valueAccessor());
     value ? $('div').promise().then(function() {
-       $(element).fadeIn()
+       $(element).fadeIn();
+       $('body').animate({ scrollTop: $(element).offset().top }, { duration: 600 });
     }) : $(element).fadeOut();
   }
 };
@@ -89,7 +90,6 @@ function branch(parent, selector) {
 			for (condition in self.branchParts[part]) {
 				var question = self.branchParts[part][condition][0],
 						answer   = self.branchParts[part][condition][1];
-				console.log("branchpart: ", self.branchParts[part]);
 				isRequired = isRequired && self.parent[question]() == answer;
 			}
 

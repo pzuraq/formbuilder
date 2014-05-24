@@ -14,6 +14,8 @@ class ResponsesController < ApplicationController
   # GET /responses/1
   # GET /responses/1.json
   def show
+    @form = @response.form
+    @group = @form.group
   end
 
   # GET /responses/new
@@ -30,10 +32,11 @@ class ResponsesController < ApplicationController
   # POST /responses
   # POST /responses.json
   def create
-    @response = Response.new({
-        form: @form,
-        answers: params[:ans]
-    })
+
+    @response = Response.new
+    @response.form = @form
+    @response.answers = params[:ans]
+    @response.respondent_id = User.find_by_id(session[:user_id])
 
     respond_to do |format|
       if @response.save
