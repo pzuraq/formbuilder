@@ -34,10 +34,14 @@
       }
 
       // keyup is required for IE to properly reset height when deleting text
-      this.$element.on('input keyup', function(event) {
+      this.$element.on('input keyup keydown', function(event) {
+        scrolltop = $(window).scrollTop();
+        height = $(document).height();
         $(this)
           .height('auto')
           .height(this.scrollHeight - diff);
+        newheight = $(document).height();
+        $(window).scrollTop(scrolltop - (height - newheight));
       });
     }
   };

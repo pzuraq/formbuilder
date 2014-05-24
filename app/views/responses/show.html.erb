@@ -1,8 +1,18 @@
 <p id="notice"><%= notice %></p>
 
+<%= link_to group_form_path(@group, @form), class: "btn btn-sm btn-default" do %>
+  <span class="glyphicon glyphicon-chevron-left"></span>
+  Back
+<% end %>
+<br>
+<br>
 <p>
   <strong>User:</strong>
-  <%= @response.respondent_id %>
+  <% if @response.respondent.nil? %>
+    Anonymous Response
+  <% else %>
+    <%= @response.respondent.username %>
+  <% end %>
 </p>
 
 <p>
@@ -12,7 +22,5 @@
 
 <p>
   <strong>Form:</strong>
-  <%= @response.form_id %>
+  <%= @form.name %>
 </p>
-
-<%= link_to 'Back', groups_path(@group) %>

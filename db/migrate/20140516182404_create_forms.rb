@@ -7,6 +7,7 @@ class CreateForms < ActiveRecord::Migration
       t.text :template
       t.hstore :render_options
 
+      # We could possibly have a set of users, :through responses. Set up tracking and all.
       t.timestamps
     end
   end
