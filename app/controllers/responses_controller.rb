@@ -20,13 +20,19 @@ class ResponsesController < ApplicationController
 
   # GET /responses/new
   def new
-    @compiled = compile_template(@form.template)
-
-    @response = Response.new
+    begin
+      @compiled = compile_template(@form.template)
+      @response = Response.new
+    rescue V8::Error
+       redirect_to group_form_path(@form.group, @form), notice: 'Your template syntax has a problem!'
+    end
   end
 
   # GET /responses/1/edit
   def edit
+    unless can_edit?
+      redirect_to group_form_url(@response.form.group, @response.form), notice: "I'm sorry Dave, I can't let you do that."
+    end
   end
 
   # POST /responses
@@ -37,10 +43,9 @@ class ResponsesController < ApplicationController
     @response.form = @form
     @response.answers = params[:ans]
     @response.respondent_id = User.find_by_id(session[:user_id])
-
     respond_to do |format|
       if @response.save
-        format.html { redirect_to group_form_response_path(@group, @form, @response), notice: 'Response was successfully created.' }
+        format.html { redirect_to group_form_response_path(@group, @form, @response), notice: 'Response was successfully submitted.' }
         format.json { render :show, status: :created, location: @response }
       else
         format.html { render :new }
@@ -52,6 +57,9 @@ class ResponsesController < ApplicationController
   # PATCH/PUT /responses/1
   # PATCH/PUT /responses/1.json
   def update
+    unless can_edit?
+      redirect_to group_url(@form.group), notice: "I'm sorry Dave, I can't let you do that."
+    end
     respond_to do |format|
       if @response.update(response_params)
         format.html { redirect_to @response, notice: 'Response was successfully updated.' }

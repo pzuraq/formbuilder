@@ -18,6 +18,9 @@ class FormsController < ApplicationController
 
   # GET /forms/1/edit
   def edit
+    unless can_edit?
+      redirect_to group_url(@form.group), notice: "I'm sorry Dave, I can't let you do that."
+    end
   end
 
   # POST /forms
@@ -39,8 +42,11 @@ class FormsController < ApplicationController
 
   # PATCH/PUT /forms/1
   def update
+    unless can_edit?
+      redirect_to group_url(@form.group), notice: "I'm sorry Dave, I can't let you do that."
+    end
     if @form.update(form_params)
-      redirect_to [@group, @form], notice: 'Form was successfully updated.'
+      redirect_to [@group, @form], notice: 'Form saved.'
     else
       render :edit
     end
@@ -48,8 +54,11 @@ class FormsController < ApplicationController
 
   # DELETE /forms/1
   def destroy
+    unless can_edit?
+      redirect_to group_url(@form.group), notice: "I'm sorry Dave, I can't let you do that."
+    end
     @form.destroy
-    redirect_to group_url(@group), notice: 'Form was successfully destroyed.'
+    redirect_to group_url(@group), notice: 'Form deleted.'
   end
 
   private

@@ -23,11 +23,18 @@ class GroupsController < ApplicationController
     @group = Group.new
     @group.parent_id = params[:parent_id]
     @group.owner = @group.parent.owner
+    unless can_edit?
+      redirect_to group_url(@group.parent), notice: "I'm sorry Dave, I can't let you do that."
+    end
   end
 
   # GET /groups/1/edit
   def edit
+    @user ||= current_user
     get_permission_variables
+    unless can_edit?
+      redirect_to group_url(@group), notice: "I'm sorry Dave, I can't let you do that."
+    end
   end
 
   # POST /groups
@@ -35,6 +42,9 @@ class GroupsController < ApplicationController
     @group = Group.new(group_params)
     @group.parent_id = params[:parent_id]
     @group.owner = @group.parent.owner
+    unless can_edit?
+      redirect_to group_url(@group.parent), notice: "I'm sorry Dave, I can't let you do that."
+    end
     if @group.save
       redirect_to @group, notice: 'Group was successfully created.'
     else
@@ -44,6 +54,9 @@ class GroupsController < ApplicationController
 
   # PATCH/PUT /groups/1
   def update
+    unless can_edit?
+      redirect_to group_url(@group), notice: "I'm sorry Dave, I can't let you do that."
+    end
     if (current_user == @group.owner)
       if !params[:new_editor_id].blank? then @group.permissions.create(:user_id => params[:new_editor_id], :group_id => @group.id, :role_rank => 1) end
       if !params[:new_moderator_id].blank? then @group.permissions.create(:user_id => params[:new_moderator_id], :group_id => @group.id, :role_rank => 0) end
@@ -58,11 +71,17 @@ class GroupsController < ApplicationController
 
   # DELETE /groups/1
   def destroy
+    unless can_edit?
+      redirect_to group_url(@group), notice: "I'm sorry Dave, I can't let you do that."
+    end
     @group.destroy
     redirect_to groups_url, notice: 'Group was successfully destroyed.'
   end
 
   def remove_permission
+    unless can_edit?
+      redirect_to group_url(@form.group), notice: "I'm sorry Dave, I can't let you do that."
+    end
     @user = User.find(params[:remove_id])
     @group = Group.find(params[:id])
     @permission = Permission.where(:user => @user, :group => @group)

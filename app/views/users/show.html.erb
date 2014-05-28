@@ -1,10 +1,9 @@
-<p id="notice"><%= notice %></p>
+<%= link_to groups_path, class: "btn btn-sm btn-default" do %>
+  <span class="glyphicon glyphicon-chevron-left"></span>
+  Back
+<% end %>
 
 <p>
   <strong>Username:</strong>
   <%= @user.username %>
 </p>
-
-
-<%= link_to 'Edit', edit_user_path(@user) %> |
-<%= link_to 'Back', users_path %>

@@ -13,3 +13,4 @@
 
 # Ignore vagrant
 /.vagrant/
+/.ruby-version

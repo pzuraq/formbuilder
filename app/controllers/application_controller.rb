@@ -11,13 +11,17 @@ class ApplicationController < ActionController::Base
 
     def is_moderator?
       if supergroups = @group.try(:supergroups)
-        current_user.moderates.where(group_id: supergroups.keys).first
+        if current_user
+          current_user.moderates.where(group_id: supergroups.keys).first
+        end
       end
     end
 
     def is_editor?
-    if supergroups = @group.try(:supergroups)
-        current_user.edits.where(group_id: supergroups.keys).first
+      if supergroups = @group.try(:supergroups)
+        if current_user
+          current_user.edits.where(group_id: supergroups.keys).first
+        end
       end
     end
 
