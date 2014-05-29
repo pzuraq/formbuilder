@@ -71,11 +71,13 @@ class GroupsController < ApplicationController
 
   # DELETE /groups/1
   def destroy
-    unless can_edit?
+    unless (can_delete? && !@group.parent.nil?)
       redirect_to group_url(@group), notice: "I'm sorry Dave, I can't let you do that."
+    else
+      @redirect = @group.parent
+      @group.destroy
+      redirect_to group_url(@redirect), notice: 'Group was successfully deleted.'
     end
-    @group.destroy
-    redirect_to groups_url, notice: 'Group was successfully destroyed.'
   end
 
   def remove_permission

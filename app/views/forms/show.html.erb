@@ -16,15 +16,23 @@
   </div>
 
   <div class="actions edit hide pull-right">
-    <% if can_edit? %>
+    <% unless @group.parent.nil? %>
+      <% if can_delete? %>
+        <div style="float:left;">
+          <%= button_to "Delete Form",  { :controller => :forms, :action => :destroy }, :method => :delete, :class => "btn btn-sm btn-danger" %>
+        </div>
+      <% end %>
+    <% end %>
+    <% if can_edit? -%>
       <%= button_tag type: 'button', id:'edit-cancel', class: 'btn btn-sm btn-default ' do %>
-        <span class="glyphicon glyphicon-ban-circle"></span>
+      <span class="glyphicon glyphicon-ban-circle"></span>
         Cancel
       <% end %>
       <%= button_tag class: 'btn btn-sm btn-default' do %>
         <span class="glyphicon glyphicon-save"></span>
         Save
       <% end %>
+
     <% end %>
   </div>
 
