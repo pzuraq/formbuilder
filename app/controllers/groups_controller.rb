@@ -56,16 +56,17 @@ class GroupsController < ApplicationController
   def update
     unless can_edit?
       redirect_to group_url(@group), notice: "I'm sorry Dave, I can't let you do that."
-    end
-    if (current_user == @group.owner)
-      if !params[:new_editor_id].blank? then @group.permissions.create(:user_id => params[:new_editor_id], :group_id => @group.id, :role_rank => 1) end
-      if !params[:new_moderator_id].blank? then @group.permissions.create(:user_id => params[:new_moderator_id], :group_id => @group.id, :role_rank => 0) end
-    end
-    get_permission_variables
-    if @group.update(group_params)
-      render :edit, notice: 'Group was successfully updated.'
     else
-      render :edit
+      if (is_moderator? || is_super?)
+        if !params[:new_editor_id].blank? then @group.permissions.create(:user_id => params[:new_editor_id], :group_id => @group.id, :role_rank => 1) end
+        if !params[:new_moderator_id].blank? then @group.permissions.create(:user_id => params[:new_moderator_id], :group_id => @group.id, :role_rank => 0) end
+      end
+      get_permission_variables
+      if @group.update(group_params)
+        redirect_to edit_group_url(@group), notice: 'Group was successfully updated.'
+      else
+        redirect_to edit_group_url(@group), notice: 'Something went wrong!'
+      end
     end
   end
 
@@ -81,15 +82,16 @@ class GroupsController < ApplicationController
   end
 
   def remove_permission
-    unless can_edit?
-      redirect_to group_url(@form.group), notice: "I'm sorry Dave, I can't let you do that."
-    end
-    @user = User.find(params[:remove_id])
     @group = Group.find(params[:id])
-    @permission = Permission.where(:user => @user, :group => @group)
-    @permission.destroy_all
-    get_permission_variables
-    render :edit
+    unless can_edit?
+      redirect_to edit_group_url(@group), notice: "I'm sorry Dave, I can't let you do that."
+    else
+      @user = User.find(params[:remove_id])
+      @permission = Permission.where(:user => @user, :group => @group)
+      @permission.destroy_all
+      get_permission_variables
+      redirect_to edit_group_url(@group)
+    end
   end
 
   private
