@@ -19,7 +19,18 @@
     <% unless @group.parent.nil? %>
       <% if can_delete? %>
         <div style="float:left;">
-          <%= button_to "Delete Form",  { :controller => :forms, :action => :destroy }, :method => :delete, :class => "btn btn-sm btn-danger", data: { confirm: 'Are you sure?' } %>
+          <%= button_to "Delete Form",
+            {
+            :controller => :forms,
+            :action => :destroy
+            },
+            :method => :delete,
+            :class => "btn btn-sm btn-danger",
+            data:
+            {
+              confirm: 'WARNING: This action cannot be reversed! Are you sure?'
+            }
+          %>
         </div>
       <% end %>
     <% end %>
