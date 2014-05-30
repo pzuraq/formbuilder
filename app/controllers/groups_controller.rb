@@ -4,6 +4,10 @@ class GroupsController < ApplicationController
 
   # GET /groups
   def index
+    @top_level_groups = Group.where(:parent_id => [false, nil])
+  end
+
+  def home
     if logged_in?
       # The user's personal group (user_group) is the only group with both their ID, and a null group_id
       @user_group = Group.where(:owner_id => session[:user_id], :parent_id => [false, nil]).first! # First ensures a single record
@@ -11,6 +15,7 @@ class GroupsController < ApplicationController
     else
       # If a user is not logged in, the Group index will show all user's personal groups.
       @top_level_groups = Group.where(:parent_id => [false, nil])
+      render :index
     end
   end
 
@@ -100,7 +105,7 @@ class GroupsController < ApplicationController
       redirect_to edit_group_url(@group), notice: "I'm sorry Dave, I can't let you do that."
     else
       if !params[:new_editor_id].blank?
-        @group.permissions.create(:user_id => params[:new_editor_id], :group_id => @group.id, :role_rank => 1) 
+        @group.permissions.create(:user_id => params[:new_editor_id], :group_id => @group.id, :role_rank => 1)
       end
       if !params[:new_moderator_id].blank?
         @group.permissions.create(:user_id => params[:new_moderator_id], :group_id => @group.id, :role_rank => 0)

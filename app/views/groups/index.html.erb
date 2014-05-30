@@ -1,23 +1,17 @@
-<table>
-  <thead>
-    <tr>
-      <th>Top Level Groups</th>
-
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
+<div class="panel panel-default top7">
+  <div class="panel-heading">
+    <h1 class="panel-title">Primary Groups</h1>
+  </div>
+  <div class="panel-body list-group">
     <% @top_level_groups.each do |group| %>
-      <tr>
-        <td><%= group.name %></td>
-        <td><%= link_to 'Show', group %></td>
-      </tr>
+      <%= link_to group, class: "list-group-item" do %>
+        <span class="lead">
+          <span class="glyphicon glyphicon-folder-close"></span>
+          <%= group.name %>
+        </span>
+      <% end %>
     <% end %>
-  </tbody>
-</table>
-<br>
+  </div>
+</div>
 
-<p>================================</p>
-
-<p><strong>Warning: We are currently under active development, and cannot make any guarantees about the privacy of data posted to this site.</strong><p>
+<p><strong>Warning: We are currently under active development, and cannot guarantee the privacy of data posted to this site.</strong><p>
