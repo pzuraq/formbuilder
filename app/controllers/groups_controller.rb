@@ -94,6 +94,22 @@ class GroupsController < ApplicationController
     end
   end
 
+  def add_permission
+    @group = Group.find(params[:id])
+    unless is_moderator? || is_super?
+      redirect_to edit_group_url(@group), notice: "I'm sorry Dave, I can't let you do that."
+    else
+      if !params[:new_editor_id].blank?
+        @group.permissions.create(:user_id => params[:new_editor_id], :group_id => @group.id, :role_rank => 1) 
+      end
+      if !params[:new_moderator_id].blank?
+        @group.permissions.create(:user_id => params[:new_moderator_id], :group_id => @group.id, :role_rank => 0)
+      end
+      get_permission_variables
+      redirect_to edit_group_url(@group)
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_group

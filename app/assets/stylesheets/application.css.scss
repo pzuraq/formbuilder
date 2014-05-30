@@ -27,6 +27,12 @@
 .top17 { margin-top:17px; }
 .top30 { margin-top:30px; }
 
+.delete-button {
+  a:visited {
+    color: #FFF;
+  }
+}
+
 .panel-body {
 
   &.list-group {
@@ -41,7 +47,12 @@
   }
 
 }
-
+.edit-name {
+  margin-top: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
 .has-feedback .form-control-feedback {
   top: 0px;
 }

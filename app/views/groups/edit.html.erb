@@ -1,7 +1,4 @@
-<%= link_to group_path(@group), class: "btn btn-sm btn-default" do %>
-  <span class="glyphicon glyphicon-chevron-left"></span>
-  Back
-<% end %>
+
 
 <%= form_for(@group) do |f| %>
   <% if @group.errors.any? %>
@@ -15,77 +12,94 @@
       </ul>
     </div>
   <% end %>
-  <div class="field">
-    <%= f.label "Group Name:" %><br>
-    <%= f.text_field :name %>
-  </div>
-
-  <table>
-    <thead>
-      <tr>
-        <th>Moderators:</th>
-
-        <th colspan="3"></th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <% @moderators.each do |moderator| %>
-        <tr>
-          <td><%= moderator.username %></td>
-          <% if is_moderator? || is_super? %>
-            <td><%= link_to 'Remove', remove_permission_group_path(:remove_id => moderator.id), method: :delete_permission, data: { confirm: 'Are you sure?' } %></td>
-          <% end %>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-  <br>
-  <% if is_moderator? || is_super? %>
-    <%= select_tag(:new_moderator_id, options_for_select(@options), :include_blank => true) %>
+  <%= link_to group_path(@group), class: "btn btn-sm btn-default" do %>
+    <span class="glyphicon glyphicon-chevron-left"></span>
+    Back
   <% end %>
-  <p>================================</p>
-  <br />
-  <table>
-    <thead>
-      <tr>
-        <th>Editors:</th>
-
-        <th colspan="3"></th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <% @editors.each do |editor| %>
-        <tr>
-          <td><%= editor.username %></td>
-          <% if is_moderator? || is_super? %>
-            <td><%= link_to 'Remove', remove_permission_group_path(:remove_id => editor.id), method: :delete_permission, data: { confirm: 'Are you sure?' } %></td>
-          <% end %>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-  <br>
-  <% if is_moderator? || is_super? %>
-    <%= select_tag(:new_editor_id, options_for_select(@options), :include_blank => true) %>
-  <% end %>
-  <br>
-  <p>================================</p>
-
-  <div class="actions">
+  <div class="actions pull-right">
     <%= f.submit class: 'btn btn-default' %>
-    <% unless @group.parent.nil? %>
-      <% if can_delete? %>
-        <%= button_to "Delete Group", @group,
-          :method => :delete,
-          class: 'btn btn-danger',
-          data:
-          {
-            confirm: 'WARNING: This action cannot be reversed! Are you sure?'
-          }
-        %>
-      <% end %>
+  </div>
+  <div class="panel panel-default top7">
+    <div class="panel-heading">
+      <h1 class="panel-title">Group Name</h1>
+    </div>
+    <div class="has-feedback edit-name">
+      <%= f.text_field :name, class: 'form-control' %>
+      <span class="glyphicon glyphicon-edit form-control-feedback"></span>
+    </div>
+  </div>
+<% end %>
+<div class="panel panel-default top7">
+  <div class="panel-heading">
+    <h1 class="panel-title">Moderators</h1>
+  </div>
+  <div class="panel-body list-group">
+    <% @moderators.each do |moderator| %>
+      <div class="list-group-item">
+        <span class="lead">
+          <%= moderator.username %>
+        </span>
+        <span class="lead pull-right delete-button">
+          <%= link_to 'Remove', remove_permission_group_path(:remove_id => moderator.id), class: "btn-sm btn-danger", method: :delete_permission, data: { confirm: 'Are you sure?' } %>
+        </span>
+      </div>
+    <% end %>
+    <% if is_moderator? || is_super? %>
+      <div class="list-group-item">
+        <span class="lead">
+          <%= form_tag(add_permission_group_path, method: "post") do %>
+            <%= select_tag(:new_moderator_id, options_for_select(@options), :include_blank => true) %>
+            <%= button_tag class: 'btn btn-sm btn-success' do %>
+              <span class="glyphicon glyphicon-plus"></span>
+              Add Moderator
+            <% end %>
+          <% end %>
+        </span>
+      </div>
     <% end %>
   </div>
+</div>
+<div class="panel panel-default top7">
+  <div class="panel-heading">
+    <h1 class="panel-title">Editors</h1>
+  </div>
+  <div class="panel-body list-group">
+    <% @editors.each do |editor| %>
+      <div class="list-group-item">
+        <span class="lead">
+          <%= editor.username %>
+        </span>
+        <span class="lead pull-right delete-button">
+          <%= link_to 'Remove', remove_permission_group_path(:remove_id => editor.id), class: "btn-sm btn-danger", method: :delete_permission, data: { confirm: 'Are you sure?' } %>
+        </span>
+      </div>
+    <% end %>
+    <% if is_moderator? || is_super? %>
+      <div class="list-group-item">
+        <span class="lead">
+          <%= form_tag(add_permission_group_path, method: "post") do %>
+            <%= select_tag(:new_editor_id, options_for_select(@options), :include_blank => true) %>
+            <%= button_tag class: 'btn btn-sm btn-success' do %>
+              <span class="glyphicon glyphicon-plus"></span>
+              Add Editor
+            <% end %>
+          <% end %>
+        </span>
+
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<% unless @group.parent.nil? %>
+  <% if can_delete? %>
+    <%= button_to "Delete Group", @group,
+      :method => :delete,
+      class: 'btn btn-danger',
+      data:
+      {
+        confirm: 'WARNING: This action cannot be reversed! Are you sure?'
+      }
+    %>
+  <% end %>
 <% end %>

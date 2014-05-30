@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   resources :groups do
     member do
       post :remove_permission
+      post :add_permission
     end
     resources :forms do
       resources :responses
