@@ -55,7 +55,7 @@ class FormsController < ApplicationController
   # DELETE /forms/1
   def destroy
     unless can_delete?
-      redirect_to group_form_url(@form), notice: "I'm sorry Dave, I can't let you do that."
+      redirect_to group_form_url(@form.group,@form), notice: "I'm sorry Dave, I can't let you do that."
     else
       @redirect = @form.group
       @form.destroy
