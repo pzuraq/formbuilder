@@ -35,4 +35,8 @@ module ApplicationHelper
   def can_delete?
     is_super? or is_moderator?
   end
+  
+  def root_group
+    Group.where(:owner => current_user, :parent_id => [false, nil]).first!
+  end
 end

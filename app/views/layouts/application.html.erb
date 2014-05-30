@@ -23,7 +23,7 @@
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
           <% if current_user %>
-            <%= link_to_li "Home", root_path %>
+            <%= link_to_li "Home", group_path(root_group) %>
           <% end %>
           <%= link_to_li "All Groups", groups_path %>
         </ul>
