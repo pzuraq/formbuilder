@@ -32,11 +32,17 @@ module ApplicationHelper
     is_super? or is_moderator? or is_editor?
   end
 
+  def can_moderate?
+    is_super? or is_moderator?
+  end
+
   def can_delete?
     is_super? or is_moderator?
   end
-  
+
   def root_group
-    Group.where(:owner => current_user, :parent_id => [false, nil]).first!
+    # Group.where(:owner => current_user, :parent_id => [false, nil]).first!
+    # This should be this...
+    current_user.root_group
   end
 end

@@ -66,6 +66,55 @@ module HandlebarsSupport
       "<label class=\"radio\"><input type=\"radio\" #{name} #{value} #{validations} #{binding}>#{block.fn(context)}</label>"
     end
 
+    handlebars.register_helper(:checkbox) do |context, block|
+      options = block[:hash]
+      name = "name=\"ans[#{context[:question_name]}][]\""
+      binding = "data-bind=\"checked:#{context[:question_name]}\""
+      value = "value=\"#{options[:value]}\""
+      validations = "data-validations='#{context[:validations]}'"
+
+      "<label class=\"checkbox\"><input type=\"checkbox\" #{name} #{value} #{validations} #{binding}>#{block.fn(context)}</label>"
+    end
+
+    handlebars.register_helper(:textfield) do |context, block|
+      options = block[:hash]
+      name = "name=\"ans[#{context[:question_name]}]\""
+      binding = "data-bind=\"value:#{context[:question_name]}\""
+      prompt = "placeholder=\"#{options[:prompt]}\""
+      validations = "data-validations='#{context[:validations]}'"
+
+      "<input type=\"text\" #{name} #{prompt} #{validations} #{binding} />"
+    end
+
+    handlebars.register_helper(:textarea) do |context, block|
+      options = block[:hash]
+      name = "name=\"ans[#{context[:question_name]}]\""
+      binding = "data-bind=\"value:#{context[:question_name]}\""
+      prompt = "placeholder=\"#{options[:prompt]}\""
+      validations = "data-validations='#{context[:validations]}'"
+
+      "<textarea #{name} #{prompt} #{validations} #{binding}></textarea>"
+    end
+
+    handlebars.register_helper(:select) do |context, block|
+      options = block[:hash]
+      name = "name=\"ans[#{context[:question_name]}]\""
+      binding = "data-bind=\"value:#{context[:question_name]}\""
+      prompt = "<option value=\"\" default disabled>#{options[:prompt]}</option>"
+      validations = "data-validations='#{context[:validations]}'"
+
+      "<select #{name} #{validations} #{binding}>#{prompt}#{block.fn(context)}</select>"
+    end
+
+    handlebars.register_helper(:option) do |context, block|
+      options = block[:hash]
+      value = options[:value] ? "value=\"ans[#{options[:value]}]\"" : ""
+      binding = "data-bind=\"value:#{context[:question_name]}\""
+      validations = "data-validations='#{context[:validations]}'"
+
+      "<option #{value}>#{block.fn(context)}</option>"
+    end
+
     handlebars.register_helper(:label) do |context, block|
       "<label for=\"ans[#{context[:question_name]}]\">#{block.fn(context)}</label>"
     end

@@ -28,6 +28,7 @@ class GroupsController < ApplicationController
     @group = Group.new
     @group.parent_id = params[:parent_id]
     @group.owner = @group.parent.owner
+
     unless can_edit?
       redirect_to group_url(@group.parent), notice: "I'm sorry Dave, I can't let you do that."
     end
@@ -37,6 +38,7 @@ class GroupsController < ApplicationController
   def edit
     @user ||= current_user
     get_permission_variables
+
     unless can_edit?
       redirect_to group_url(@group), notice: "I'm sorry Dave, I can't let you do that."
     end
@@ -62,7 +64,7 @@ class GroupsController < ApplicationController
     unless can_edit?
       redirect_to group_url(@group), notice: "I'm sorry Dave, I can't let you do that."
     else
-      if (is_moderator? || is_super?)
+      if can_moderate?
         if !params[:new_editor_id].blank? then @group.permissions.create(:user_id => params[:new_editor_id], :group_id => @group.id, :role_rank => 1) end
         if !params[:new_moderator_id].blank? then @group.permissions.create(:user_id => params[:new_moderator_id], :group_id => @group.id, :role_rank => 0) end
       end
@@ -77,7 +79,7 @@ class GroupsController < ApplicationController
 
   # DELETE /groups/1
   def destroy
-    unless (can_delete? && !@group.parent.nil?)
+    unless can_moderate? and !@group.parent.nil?
       redirect_to group_url(@group), notice: "I'm sorry Dave, I can't let you do that."
     else
       @redirect = @group.parent
@@ -88,6 +90,7 @@ class GroupsController < ApplicationController
 
   def remove_permission
     @group = Group.find(params[:id])
+
     unless can_edit?
       redirect_to edit_group_url(@group), notice: "I'm sorry Dave, I can't let you do that."
     else
@@ -101,7 +104,8 @@ class GroupsController < ApplicationController
 
   def add_permission
     @group = Group.find(params[:id])
-    unless is_moderator? || is_super?
+
+    unless can_moderate?
       redirect_to edit_group_url(@group), notice: "I'm sorry Dave, I can't let you do that."
     else
       if !params[:new_editor_id].blank?

@@ -7,8 +7,11 @@ class User < ActiveRecord::Base
 
   validates :username, uniqueness: true
 
+  has_many :groups
+  # We are going to want this a lot so lets make a shortcut
+  has_one :root_group, -> { where :parent_id => [false, nil] }, foreign_key: :owner_id, class_name: 'Group'
+
   has_many :permissions
-  has_many :groups, through: :permissions
   has_many :responses
 
   has_many :moderates, -> { where role_rank: 0 }, class_name: 'Permission'
@@ -16,7 +19,7 @@ class User < ActiveRecord::Base
   has_many :views, -> { where role_rank: 2 }, class_name: 'Permission'
 
   after_create :create_group
-  
+
   def create_group
     Group.create(owner: self, name: self.username)
   end

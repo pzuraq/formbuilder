@@ -115,14 +115,21 @@ function section(index, parent, selector) {
 	self.index = index;
 	self.display = self.index == 0 ? ko.observable(true) : ko.observable(false);
 
-	selector.children('.form-group').find('input').each(function() {
-		var property = $(this).attr('name').replace(/ans\[|\]/g,''),
+	selector.children('.form-group').find('input, select, textarea').each(function() {
+		var property = $(this).attr('name').replace(/ans\[|\]|\[/g,''),
+		    type = $(this).attr('type'),
 		    validations = $(this).data('validations');
 
-		if(!self[property]) {
-			self[property] = ko.observable();
+
+		if (!self[property]) {
+			if (type == "checkbox") {
+				self[property] = ko.observableArray();
+			} else {
+				self[property] = ko.observable();
+			}
 
 			if (validations.required) {
+		console.log(property, validations);
 				self[property].extend({ required: true });
 			}
 

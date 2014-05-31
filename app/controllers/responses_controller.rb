@@ -38,11 +38,11 @@ class ResponsesController < ApplicationController
   # POST /responses
   # POST /responses.json
   def create
-
     @response = Response.new
     @response.form = @form
-    @response.answers = params[:ans]
-    @response.respondent_id = User.find_by_id(session[:user_id])
+    @response.respondent = current_user
+    @response.answers = params[:ans].merge(params[:ans]) { |k,v| v.is_a?(Array) ? v.join(',') : v }
+
     respond_to do |format|
       if @response.save
         format.html { redirect_to group_form_response_path(@group, @form, @response), notice: 'Response was successfully submitted.' }
@@ -75,6 +75,7 @@ class ResponsesController < ApplicationController
   # DELETE /responses/1.json
   def destroy
     @response.destroy
+
     respond_to do |format|
       format.html { redirect_to responses_url }
       format.json { head :no_content }

@@ -37,6 +37,10 @@ class ApplicationController < ActionController::Base
       is_super? or is_moderator? or is_editor?
     end
 
+    def can_moderate?
+      is_super? or is_moderator?
+    end
+
     def can_delete?
       is_super? or is_moderator?
     end
