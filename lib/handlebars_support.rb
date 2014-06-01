@@ -49,7 +49,7 @@ module HandlebarsSupport
 
       context[:question_name] = options[:name]
       context[:validations] = {
-        required: options[:required] ? options[:required] : true
+        required: options[:required] ? YAML.load(options[:required]) : true
       }.to_json
       render = block.fn(context)
 
@@ -82,8 +82,9 @@ module HandlebarsSupport
       binding = "data-bind=\"value:#{context[:question_name]}\""
       prompt = "placeholder=\"#{options[:prompt]}\""
       validations = "data-validations='#{context[:validations]}'"
+      klass = "class=\"form-control\""
 
-      "<input type=\"text\" #{name} #{prompt} #{validations} #{binding} />"
+      "<input type=\"text\" #{name} #{prompt} #{validations} #{binding} #{klass} />"
     end
 
     handlebars.register_helper(:textarea) do |context, block|
@@ -92,8 +93,9 @@ module HandlebarsSupport
       binding = "data-bind=\"value:#{context[:question_name]}\""
       prompt = "placeholder=\"#{options[:prompt]}\""
       validations = "data-validations='#{context[:validations]}'"
+      klass = "class=\"form-control\""
 
-      "<textarea #{name} #{prompt} #{validations} #{binding}></textarea>"
+      "<textarea #{name} #{prompt} #{validations} #{binding} #{klass}></textarea>"
     end
 
     handlebars.register_helper(:select) do |context, block|
@@ -102,8 +104,9 @@ module HandlebarsSupport
       binding = "data-bind=\"value:#{context[:question_name]}\""
       prompt = "<option value=\"\" default disabled>#{options[:prompt]}</option>"
       validations = "data-validations='#{context[:validations]}'"
+      klass = "class=\"form-control\""
 
-      "<select #{name} #{validations} #{binding}>#{prompt}#{block.fn(context)}</select>"
+      "<select #{name} #{validations} #{binding} #{klass}>#{prompt}#{block.fn(context)}</select>"
     end
 
     handlebars.register_helper(:option) do |context, block|
