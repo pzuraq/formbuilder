@@ -19,6 +19,13 @@ gem 'bootstrap-sass', '~> 3.1.1'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
 
+# Javascripts
+gem 'jquery-rails', '~> 3.1.0'
+gem 'angularjs-rails', '~> 1.2.16'
+gem 'angular-ui-rails', '~> 0.4.0.3'
+gem 'angular-ui-bootstrap-rails', '~> 0.11.0'
+
+
 # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
 gem 'spring',        group: :development
 gem 'unicorn'
