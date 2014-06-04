@@ -10,13 +10,11 @@
 // Read Sprockets README (https://github.com/sstephenson/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//= require jquery/dist/jquery
-//= require jquery-ujs/src/rails
-//= require textarea-autosize/dist/jquery.textarea_auto_expand
+//= require jquery
+//= require jquery_ujs
 //= require turbolinks
 //= require bootstrap
-//= require knockout/dist/knockout
-//= require knockout-validation/Dist/knockout.validation
+
 //= require_tree .
 
 ko.validation.configure({
