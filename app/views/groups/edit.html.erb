@@ -23,17 +23,24 @@
         %>
       <% end %>
     <% end %>
-
-    <%= f.submit class: 'btn btn-default' %>
+    <% if can_moderate? %>
+      <%= f.submit class: 'btn btn-default' %>
+    <% end %>
   </div>
   <div class="panel panel-default top7">
     <div class="panel-heading">
       <h1 class="panel-title">Group Name</h1>
     </div>
-    <div class="has-feedback edit-name">
-      <%= f.text_field :name, class: 'form-control' %>
-      <span class="glyphicon glyphicon-edit form-control-feedback"></span>
-    </div>
+    <% if can_moderate? %>
+      <div class="has-feedback edit-name">
+        <%= f.text_field :name, class: 'form-control' %>
+        <span class="glyphicon glyphicon-edit form-control-feedback"></span>
+      </div>
+    <% else %>
+      <div class="has-feedback edit-name">
+        <%= f.text_field :name, class: 'form-control' %>
+      </div>
+    <% end %>
   </div>
 <% end %>
 <div class="panel panel-default top7">
@@ -46,9 +53,11 @@
         <span class="lead">
           <%= moderator.username %>
         </span>
-        <span class="lead pull-right delete-button">
-          <%= link_to 'Remove', remove_permission_group_path(:remove_id => moderator.id), class: "btn-sm btn-danger", method: :delete_permission, data: { confirm: 'Are you sure?' } %>
-        </span>
+        <% if can_moderate? %>
+          <span class="lead pull-right delete-button">
+            <%= link_to 'Remove', remove_permission_group_path(:remove_id => moderator.id), class: "btn-sm btn-danger", method: :delete_permission, data: { confirm: 'Are you sure?' } %>
+          </span>
+        <% end %>
       </div>
     <% end %>
     <% if is_moderator? || is_super? %>
@@ -76,9 +85,11 @@
         <span class="lead">
           <%= editor.username %>
         </span>
-        <span class="lead pull-right delete-button">
-          <%= link_to 'Remove', remove_permission_group_path(:remove_id => editor.id), class: "btn-sm btn-danger", method: :delete_permission, data: { confirm: 'Are you sure?' } %>
-        </span>
+        <% if can_moderate? %>
+          <span class="lead pull-right delete-button">
+            <%= link_to 'Remove', remove_permission_group_path(:remove_id => editor.id), class: "btn-sm btn-danger", method: :delete_permission, data: { confirm: 'Are you sure?' } %>
+          </span>
+        <% end %>
       </div>
     <% end %>
     <% if is_moderator? || is_super? %>

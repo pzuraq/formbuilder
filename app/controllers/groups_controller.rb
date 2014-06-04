@@ -61,13 +61,9 @@ class GroupsController < ApplicationController
 
   # PATCH/PUT /groups/1
   def update
-    unless can_edit?
+    unless can_moderate?
       redirect_to group_url(@group), notice: "I'm sorry Dave, I can't let you do that."
     else
-      if can_moderate?
-        if !params[:new_editor_id].blank? then @group.permissions.create(:user_id => params[:new_editor_id], :group_id => @group.id, :role_rank => 1) end
-        if !params[:new_moderator_id].blank? then @group.permissions.create(:user_id => params[:new_moderator_id], :group_id => @group.id, :role_rank => 0) end
-      end
       get_permission_variables
       if @group.update(group_params)
         redirect_to edit_group_url(@group), notice: 'Group was successfully updated.'
@@ -91,7 +87,7 @@ class GroupsController < ApplicationController
   def remove_permission
     @group = Group.find(params[:id])
 
-    unless can_edit?
+    unless can_moderate?
       redirect_to edit_group_url(@group), notice: "I'm sorry Dave, I can't let you do that."
     else
       @user = User.find(params[:remove_id])

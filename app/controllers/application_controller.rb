@@ -14,23 +14,25 @@ class ApplicationController < ActionController::Base
     end
 
     def is_moderator?
-      if supergroups = @group.try(:supergroups)
-        if current_user
-          current_user.moderates.where(group_id: supergroups.keys).first
+      if logged_in?
+        if supergroups = @group.try(:supergroups)
+          current_user.moderates.where(group_id: supergroups.keys.push(@group.id)).first
         end
       end
     end
 
     def is_editor?
-      if supergroups = @group.try(:supergroups)
-        if current_user
-          current_user.edits.where(group_id: supergroups.keys).first
+      if logged_in?
+        if supergroups = @group.try(:supergroups)
+          current_user.edits.where(group_id: supergroups.keys.push(@group.id)).first
         end
       end
     end
 
     def is_super?
-      current_user == @group.try(:owner)
+      if logged_in?
+        current_user == @group.try(:owner)
+      end
     end
 
     def can_edit?

@@ -31,24 +31,26 @@ class FormsController < ApplicationController
 
     unless can_edit?
       redirect_to group_url(@form.group), notice: "I'm sorry Dave, I can't let you do that."
-    end
-
-    if @form.save
-      redirect_to [@form.group,@form], notice: 'Form was successfully created.'
     else
-      render :new
+
+      if @form.save
+        render :show, notice: 'Form was successfully created.'
+      else
+        render :new, notice: 'Something went wrong...'
+      end
     end
   end
 
   # PATCH/PUT /forms/1
   def update
     unless can_edit?
-      redirect_to group_url(@form.group), notice: "I'm sorry Dave, I can't let you do that."
-    end
-    if @form.update(form_params)
-      redirect_to [@group, @form], notice: 'Form saved.'
+      render :show, notice: "I'm sorry Dave, I can't let you do that."
     else
-      render :edit
+      if @form.update(form_params)
+        render :show, notice: 'Form saved.'
+      else
+        render :show, notice: 'Something went wrong...'
+      end
     end
   end
 
