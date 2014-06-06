@@ -83,6 +83,8 @@ GEM
       multi_xml (~> 0.5)
       rack (~> 1.2)
     pg (0.17.1)
+    pickadate-rails (3.5.2.0)
+      railties (>= 3.1.0)
     polyglot (0.3.4)
     rack (1.5.2)
     rack-contrib (1.1.0)
@@ -160,6 +162,7 @@ DEPENDENCIES
   jquery-rails (~> 3.1.0)
   meta_request
   pg
+  pickadate-rails (~> 3.5.2.0)
   rails (= 4.1.0)
   sass-rails (~> 4.0.3)
   sorcery

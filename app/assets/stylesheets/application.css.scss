@@ -12,12 +12,171 @@
  *
  *= require_tree .
  *= require_self
+ *= require pickadate/classic
+ *= require pickadate/classic.date
+ *= require pickadate/classic.time
+ *= require icomoon
  */
 
+$border-radius-base:        0px;
+$border-radius-large:       0px;
+$border-radius-small:       0px;
+
+$gray-lighter: lighten(#000, 96%);
+
 @import "bootstrap";
+@import "angular_better_placeholders";
 
 .container {
   max-width: 720px;
+}
+
+form {
+  max-width: 600px;
+  margin: auto;
+  position: relative;
+}
+
+.better-placeholder-text:hover ~ .form-control {
+  background: $gray-lighter;
+}
+
+.form-control {
+  border-radius: 0;
+  box-shadow: none;
+  border: none;
+  border-bottom: solid 3px #dedede;
+
+  &[readonly] {
+    background: #fff;
+    cursor: pointer;
+  }
+
+  &:hover {
+    background: $gray-lighter;
+  }
+
+  &:focus {
+    background: #eff6fc !important;
+  }
+}
+
+.section {
+  position: absolute;
+  left: 0;
+  opacity: 1;
+  width: 100%;
+
+  -webkit-transition: opacity 0.3s linear, left 0.3s ease-in, right 0.3s ease-in;
+     -moz-transition: opacity 0.3s linear, left 0.3s ease-in, right 0.3s ease-in;
+       -o-transition: opacity 0.3s linear, left 0.3s ease-in, right 0.3s ease-in;
+          transition: opacity 0.3s linear, left 0.3s ease-in, right 0.3s ease-in;
+}
+
+.prev {
+  .section.ng-hide {
+    left: 25%;
+    opacity: 0;
+  }
+
+  .section.ng-hide-add {
+    display:block !important;
+  }
+  .section.ng-hide-remove {
+    display:block !important;
+    left: -25%;
+    opacity: 0;
+  }
+}
+
+.next {
+  .section.ng-hide {
+    left: -25%;
+    opacity: 0;
+  }
+
+  .section.ng-hide-add {
+    display:block !important;
+  }
+  .section.ng-hide-remove {
+    display:block !important;
+    left: 25%;
+    opacity: 0;
+  }
+}
+
+.btn-next, .btn-prev {
+  color: $gray;
+  border: none;
+
+  &:hover {
+    background-color: $gray-lighter;
+  }
+}
+
+.btn-submit, .btn-start  {
+  background-color: #fff;
+  color: $gray;
+
+
+  &:hover {
+    background-color: #fff;
+    color: darken($brand-primary, 5%);
+    border-color: $brand-primary;
+  }
+}
+
+p.lead {
+  font-size: 20px;
+  font-weight: 200;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+.fm-radio, .fm-checkbox {
+  display: block;
+  padding: 8px 0px 8px 40px;
+  text-align: left;
+  border: none;
+  position: relative;
+  width: 100%;
+
+  font-size: 16px;
+  font-weight: 200;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  vertical-align: top;
+  white-space: inherit;
+
+  .icon {
+    color: #555;
+    font-size: 18px;
+    position: absolute;
+    top: 10px;
+    left: 14px;
+  }
+
+  &.active {
+    border-left: solid 3px #428bca;
+    box-shadow: none;
+    background: $gray-lighter;
+
+    .icon {
+      color: $brand-primary;
+    }
+  }
+
+  &:hover {
+    background: $gray-lighter;
+  }
+}
+
+*:focus {
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+label.lead {
+  margin-top: 20px;
+  margin-bottom: 10px;
 }
 
 .top5 { margin-top:5px; }
@@ -55,4 +214,10 @@
 }
 .has-feedback .form-control-feedback {
   top: 0px;
+}
+
+@media (min-width: $screen-sm-min) {
+  .btn-prev {
+
+  }
 }
