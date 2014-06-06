@@ -14,188 +14,69 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require bootstrap
-
+//= require pickadate/picker
+//= require pickadate/picker.date
+//= require pickadate/picker.time
+//= require angular
+//= require angular-animate
+//= require angular-ui-bootstrap-tpls
+//= require angular_better_placeholders
+//= require ng-pickadate
 //= require_tree .
 
-ko.validation.configure({
-	registerExtenders: true,
-	messagesOnModified: true,
-	insertMessages: true,
-	parseInputAttributes: true,
-	messageTemplate: null
+app = angular.module('formbuilder', ['ngAnimate', 'ui.bootstrap', 'angularBetterPlaceholder', 'ng.pickadate'])
+
+app.animation('.section', function() {
+  return {
+    addClass : function(element, className, done) {
+      if(className == 'ng-hide') {
+        jQuery(element).animate({
+          opacity:0
+        }, done);
+      }
+      else {
+        done();
+      }
+    },
+    removeClass : function(element, className, done) {
+      if(className == 'ng-hide') {
+        element.css('opacity',0);
+        jQuery(element).animate({
+          opacity:1
+        }, done);
+      }
+      else {
+        done();
+      }
+    }
+  };
 });
 
-ko.validatedObservable = function (initialValue) {
-	if (!ko.validation.utils.isObject(initialValue)) { return ko.observable(initialValue).extend({ validatable: true }); }
-
-	var obsv = ko.observable(initialValue);
-	obsv.errors = ko.validation.group(initialValue);
-	obsv.isValid = ko.computed(function () {
-		if (obsv().required) {
-			return obsv().required() ? obsv.errors().length === 0 : true;
-		} else {
-			return obsv.errors().length === 0;
-		}
-	});
-
-	return obsv;
-};
-
-ko.bindingHandlers.fadeVisible = {
-  init: function(element, valueAccessor) {
-    // Initially set the element to be instantly visible/hidden depending on the value
-    var value = ko.unwrap(valueAccessor());
-    $(element).toggle(value); // Use "unwrapObservable" so we can handle values that may or may not be observable
-  },
-  update: function(element, valueAccessor) {
-    // Whenever the value subsequently changes, slowly fade the element in or out
-    var value = ko.unwrap(valueAccessor());
-    value ? $('div').promise().then(function() {
-       $(element).fadeIn();
-       $('body').animate({ scrollTop: $(element).offset().top }, { duration: 600 });
-    }) : $(element).fadeOut();
-  }
-};
-
-var viewModel = {}
-
-function branch(parent, selector) {
-	var self = this;
-
-	self.parent = parent;
-	self.required = ko.observable(false);
-	self.branchParts = selector.data('branch').split('|');
-	self.display = ko.observable(false);
-	self.sections = [];
-
-	for (part in self.branchParts) {
-		self.branchParts[part] = self.branchParts[part].split('+');
-		for (condition in self.branchParts[part]) {
-			self.branchParts[part][condition] = self.branchParts[part][condition].split('=');
+function Controller($scope) {
+  $scope.init = function() {
+		if ($scope.section0) {
+			$scope.section0.$show = true
 		}
 	}
 
-	selector.children('.section').each(function(index) {
-		var sectionName = $(this).attr('id');
+	$scope.next = function(num) {
+		$scope.transitionDirection = 'next';
+		$scope['section'+(num+1)].$show = true;
+		$scope['section'+num].$show = false;
+	}
 
-		self[sectionName] = ko.validatedObservable(new section(index, self, $(this)));
-		self.sections.push(sectionName);
-	});
+	$scope.prev = function(num) {
+		$scope.transitionDirection = 'prev';
+		$scope['section'+(num-1)].$show = true;
+		$scope['section'+num].$show = false;
+	}
 
-	self.setRequired = ko.computed(function() {
-		for (part in self.branchParts) {
-			var isRequired = true;
-			for (condition in self.branchParts[part]) {
-				var question = self.branchParts[part][condition][0],
-						answer   = self.branchParts[part][condition][1];
-				isRequired = isRequired && self.parent[question]() == answer;
-			}
+	$scope.open = function($event) {
+    $event.preventDefault();
+    $event.stopPropagation();
 
-			self.required(isRequired);
-		}
-	});
+    $scope.opened = true;
+  };
 
-	self.clearBranch = ko.computed(function() {
-		if (!self.required()) {
-			for (sectionName in self.sections) {
-				self[self.sections[sectionName]]().clearProperties();
-			}
-		}
-	});
+	$scope.question1 = null;
 }
-
-function section(index, parent, selector) {
-	var self = this;
-
-	self.parent = parent;
-	self.isValid = ko.observable();
-	self.properties = [];
-	self.index = index;
-	self.display = self.index == 0 ? ko.observable(true) : ko.observable(false);
-
-	selector.children('.form-group').find('input, select, textarea').each(function() {
-		var property = $(this).attr('name').replace(/ans\[|\]|\[/g,''),
-		    type = $(this).attr('type'),
-		    validations = $(this).data('validations');
-
-
-		if (!self[property]) {
-			if (type == "checkbox") {
-				self[property] = ko.observableArray();
-			} else {
-				self[property] = ko.observable();
-			}
-
-			if (validations.required) {
-		console.log(property, validations);
-				self[property].extend({ required: true });
-			}
-
-			self.properties.push(property);
-		}
-	});
-
-	selector.children('.branch').each(function() {
-		var branchName = $(this).attr('id');
-
-		self[branchName] = ko.validatedObservable(new branch(self, $(this)));
-	});
-
-	self.setDisplay = ko.computed(function() {
-		$.each(self.properties, function(index, prop) {
-			self[prop]();
-		});
-
-		var next = parent['s'+(index+1)];
-
-		if (next) {
-			if (self.isValid()) {
-				next().display(true);
-			} else {
-				next().display(false);
-			}
-		}
-	}).extend({ rateLimit: 50 });
-
-	self.clearProperties = function() {
-		for (property in self.properties) {
-			self[self.properties[property]](null);
-		}
-	}
-}
-
-
-$(document).on('page:change', function () {
-	if($('.form').length > 0) {
-		viewModel = function() {
-		  var self = this;
-
-			$('.form').children('.section').each(function(index) {
-		    self[$(this).attr('id')] = ko.validatedObservable(new section(index, self, $(this)));
-		  });
-
-
-			self.errors = ko.validation.group(self);
-			self.isValid = ko.computed(function () {
-				return self.errors().length === 0;
-			});
-
-			self.display = ko.computed(function() {
-				return self.isValid();
-			});
-		};
-
-		ko.applyBindings(new viewModel());
-	}
-
-	$('#edit').click(function() {
-		$('.lock').addClass('hide');
-		$('.edit').removeClass('hide');
-		$('textarea.code').textareaAutoExpand();
-	});
-
-	$('#edit-cancel').click(function() {
-		$('.lock').removeClass('hide');
-		$('.edit').addClass('hide');
-	});
-});
