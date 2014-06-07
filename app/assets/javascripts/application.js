@@ -11,6 +11,7 @@
 // about supported directives.
 //
 //= require jquery
+//= require jquery.ui.effect.all
 //= require jquery_ujs
 //= require turbolinks
 //= require bootstrap
@@ -26,30 +27,59 @@
 
 app = angular.module('formbuilder', ['ngAnimate', 'ui.bootstrap', 'angularBetterPlaceholder', 'ng.pickadate'])
 
-app.animation('.section', function() {
-  return {
-    addClass : function(element, className, done) {
-      if(className == 'ng-hide') {
-        jQuery(element).animate({
-          opacity:0
-        }, done);
+app.directive('ngDisplay', function() {
+  return function(scope, element, attrs) {
+    scope.$watch(attrs.ngDisplay, function(display) {
+      if(display) {
+        element.removeClass('ng-hide');
+        if(scope.transitionDirection == 'prev') {
+          element.css('opacity', 0);
+          element.css('left','-50%');
+          jQuery(element).animate({
+            opacity: 1,
+            left: 0
+          }, {
+            easing: 'easeInOutCirc'
+          });
+        } else {
+          element.css('opacity', 0);
+          element.css('left','50%');
+          jQuery(element).animate({
+            opacity: 1,
+            left: 0
+          }, {
+            easing: 'easeInOutCirc',
+          });
+        }
+      } else {
+        if(scope.transitionDirection == 'prev') {
+          element.css('opacity',1);
+          element.css('left', 0);
+          jQuery(element).animate({
+            opacity:0,
+            left: '50%'
+          }, {
+            easing: 'easeInOutCirc',
+            complete: function() {
+              element.addClass('ng-hide');
+            }
+          });
+        } else {
+          element.css('opacity',1);
+          element.css('left',0);
+          jQuery(element).animate({
+            opacity:0,
+            left: '-50%'
+          }, {
+            easing: 'easeInOutCirc',
+            complete: function() {
+              element.addClass('ng-hide');
+            }
+          });
+        }
       }
-      else {
-        done();
-      }
-    },
-    removeClass : function(element, className, done) {
-      if(className == 'ng-hide') {
-        element.css('opacity',0);
-        jQuery(element).animate({
-          opacity:1
-        }, done);
-      }
-      else {
-        done();
-      }
-    }
-  };
+    })
+  }
 });
 
 function Controller($scope) {

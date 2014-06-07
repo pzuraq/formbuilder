@@ -19,7 +19,7 @@
       <h1 class="text-center">BRCA1 Survey</h1>
 
       <form novalidate name="theform" class="theform" ng-class="transitionDirection">
-        <div ng-form name="section0" ng-show="section0.$show" class="section">
+        <div ng-form name="section0" ng-display="section0.$show" class="section">
           <p class="lead">This questionnaire asks questions about your health and your family's health history.
             Your answers will help decide whether you might benefit from tests to check for certain
             gene mutations (especially BRCA) that increase risk of certain cancers.</p>
@@ -34,7 +34,7 @@
             </button>
           </div>
         </div>
-        <div ng-form name="section1" ng-show="section1.$show" class="section">
+        <div ng-form name="section1" ng-display="section1.$show" class="section">
           <button class="btn btn-default btn-prev col-xs-12" ng-click="prev(1)">
             <span class="icon-arrow-left"></span> Prev
           </button>
@@ -66,12 +66,12 @@
           </div>
 
           <div class="col-xs-12 top15 center-text">
-            <button class="btn btn-default btn-next btn-block" ng-show="section1.$valid" ng-click="next(1)">
+            <button class="btn btn-default btn-next btn-block" ng-display="section1.$valid" ng-click="next(1)">
               Next <span class="icon-arrow-right2"></span>
             </button>
           </div>
         </div>
-        <div ng-form name="section2" ng-show="section2.$show" class="section">
+        <div ng-form name="section2" ng-display="section2.$show" class="section">
           <div class="col-xs-12 top15 center-text">
             <button class="btn btn-default btn-prev col-xs-12" ng-click="prev(2)">
               <span class="icon-arrow-left"></span> Prev
@@ -112,7 +112,7 @@
           </div>
 
           <div class="col-xs-12 top15 center-text">
-            <button type="submit" class="btn btn-default btn-lg btn-block btn-submit" ng-show="theform.$valid">
+            <button type="submit" class="btn btn-default btn-lg btn-block btn-submit" ng-display="theform.$valid">
               Submit <span class="icon-download2"></span>
             </button>
           </div>
