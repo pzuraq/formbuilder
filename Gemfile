@@ -21,6 +21,7 @@ gem 'turbolinks'
 
 # Javascripts
 gem 'jquery-rails', '~> 3.1.0'
+gem 'jquery-ui-rails', '~> 4.2.1'
 gem 'angularjs-rails', '~> 1.2.16'
 gem 'angular-ui-rails', '~> 0.4.0.3'
 gem 'angular-ui-bootstrap-rails', '~> 0.11.0'

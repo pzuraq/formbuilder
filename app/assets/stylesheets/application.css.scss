@@ -67,43 +67,43 @@ form {
   opacity: 1;
   width: 100%;
 
-  -webkit-transition: opacity 0.3s linear, left 0.3s ease-in, right 0.3s ease-in;
-     -moz-transition: opacity 0.3s linear, left 0.3s ease-in, right 0.3s ease-in;
-       -o-transition: opacity 0.3s linear, left 0.3s ease-in, right 0.3s ease-in;
-          transition: opacity 0.3s linear, left 0.3s ease-in, right 0.3s ease-in;
+  // -webkit-transition: opacity 0.3s linear, left 0.3s ease-in, right 0.3s ease-in;
+  //    -moz-transition: opacity 0.3s linear, left 0.3s ease-in, right 0.3s ease-in;
+  //      -o-transition: opacity 0.3s linear, left 0.3s ease-in, right 0.3s ease-in;
+  //         transition: opacity 0.3s linear, left 0.3s ease-in, right 0.3s ease-in;
 }
 
-.prev {
-  .section.ng-hide {
-    left: 25%;
-    opacity: 0;
-  }
-
-  .section.ng-hide-add {
-    display:block !important;
-  }
-  .section.ng-hide-remove {
-    display:block !important;
-    left: -25%;
-    opacity: 0;
-  }
-}
-
-.next {
-  .section.ng-hide {
-    left: -25%;
-    opacity: 0;
-  }
-
-  .section.ng-hide-add {
-    display:block !important;
-  }
-  .section.ng-hide-remove {
-    display:block !important;
-    left: 25%;
-    opacity: 0;
-  }
-}
+// .prev {
+//   .section.ng-hide {
+//     left: 25%;
+//     opacity: 0;
+//   }
+//
+//   .section.ng-hide-add {
+//     display:block !important;
+//   }
+//   .section.ng-hide-remove {
+//     display:block !important;
+//     left: -25%;
+//     opacity: 0;
+//   }
+// }
+//
+// .next {
+//   .section.ng-hide {
+//     left: -25%;
+//     opacity: 0;
+//   }
+//
+//   .section.ng-hide-add {
+//     display:block !important;
+//   }
+//   .section.ng-hide-remove {
+//     display:block !important;
+//     left: 25%;
+//     opacity: 0;
+//   }
+// }
 
 .btn-next, .btn-prev {
   color: $gray;
