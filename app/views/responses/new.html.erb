@@ -1,26 +1,8 @@
-<%= link_to group_form_path(@group, @form), class: "btn btn-sm btn-default" do %>
-  <span class="glyphicon glyphicon-chevron-left"></span>
-  Back
-<% end %>
+<div ng-controller="formbuilder" >
+  <h1 class="text-center"><%= @form.name %></h1>
 
-<h1><%= @form.name %></h1>
-
-<%= form_for [@group, @form, @response], html: {class: 'form'} do |f| %>
-  <% if @response.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@response.errors.count, "error") %> prohibited this response from being saved:</h2>
-
-      <ul>
-      <% @response.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <%= @compiled %>
-
-  <div class="actions" data-bind="fadeVisible:display">
-    <%= button_tag 'Submit', class: "btn btn-sm btn-default" %>
-  </div>
-<% end %>
+  <form novalidate name="theform" class="theform">
+    <%= @compiled %>
+    <div class="hide" ng-init="init()"></div>
+  </form>
+</div>

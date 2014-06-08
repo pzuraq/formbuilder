@@ -23,6 +23,8 @@ class ResponsesController < ApplicationController
     begin
       @compiled = compile_template(@form.template)
       @response = Response.new
+
+      render layout: 'response'
     rescue V8::Error
        redirect_to group_form_path(@form.group, @form), notice: 'Your template syntax has a problem!'
     end

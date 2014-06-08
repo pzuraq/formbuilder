@@ -1,0 +1,84 @@
+.better-placeholder {
+  padding: 20px 12px 6px 12px;
+  height: auto;
+  font-size: 18px;
+  font-weight: 200;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+.better-placeholder::-webkit-input-placeholder {
+  display: none;
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+}
+.better-placeholder::-moz-placeholder {
+  display: none;
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+}
+.better-placeholder:-ms-input-placeholder {
+  display: none;
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+}
+.better-placeholder::placeholder {
+  display: none;
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+}
+.has-error .better-placeholder-text {
+  color: #a94442;
+}
+.has-error .better-placeholder-text.active {
+  color: #a94442;
+}
+.has-success .better-placeholder-text {
+  color: #3c763d;
+}
+.has-success .better-placeholder-text.active {
+  color: #3c763d;
+}
+.has-warning .better-placeholder-text {
+  color: #8a6d3b;
+}
+.has-warning .better-placeholder-text.active {
+  color: #8a6d3b;
+}
+.better-placeholder-text {
+  -webkit-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+  position: absolute;
+  top: 12px;
+  margin-left: 12px;
+  line-height: 20px;
+  height: 20px;
+  color: #888;
+  -webkit-transform-origin: 0 0;
+  -ms-transform-origin: 0 0;
+  transform-origin: 0 0;
+  max-width: 85%;
+/* You have to fiddle with this and it .active replacement depending on size of field */
+  margin-right: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  font-size: 18px;
+  font-weight: 200;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+.better-placeholder-text.active {
+  max-width: 110%;
+  visibility: visible;
+  -webkit-transform: scale(0.7);
+  -ms-transform: scale(0.7);
+  transform: scale(0.7);
+  -webkit-transform-origin: 0 0;
+  -ms-transform-origin: 0 0;
+  transform-origin: 0 0;
+  color: #428bca;
+  top: 0px;
+}

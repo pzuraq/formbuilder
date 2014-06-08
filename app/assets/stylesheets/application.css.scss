@@ -105,6 +105,10 @@ form {
 //   }
 // }
 
+.followup {
+  float: left;
+}
+
 .btn-next, .btn-prev {
   color: $gray;
   border: none;
@@ -113,6 +117,70 @@ form {
     background-color: $gray-lighter;
   }
 }
+/* Extra Small devices (mobiles, 320px and up) */
+@media (min-width: 320px) and (max-width: 767px) {
+  .prev-container, .next-container {
+    float: left;
+    width: 50%;
+  }
+}
+
+/* Small devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+  .prev-container, .next-container {
+    position: absolute;
+    top: 0;
+  }
+
+  .prev-container {
+    left: 0;
+  }
+
+  .next-container {
+    right: 0;
+  }
+
+  .btn-next, .btn-prev {
+    border-top: solid 69px;
+    border-bottom: solid 69px;
+    border-color: #fff !important;
+    height: 100%;
+    position: fixed;
+    top: 0;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .btn-next, .btn-prev {
+    width: 100px;
+  }
+
+  .btn-prev {
+    margin-left: -100px;
+  }
+
+  .btn-next {
+    margin-right: -100px;
+  }
+}
+
+/* Medium devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+  .btn-next, .btn-prev {
+    width: 200px;
+  }
+
+  .btn-prev {
+    margin-left: -200px;
+  }
+
+  .btn-next {
+    margin-right: -200px;
+  }
+}
+
+
+
 
 .btn-submit, .btn-start  {
   background-color: #fff;
@@ -134,7 +202,7 @@ p.lead {
 
 .fm-radio, .fm-checkbox {
   display: block;
-  padding: 8px 0px 8px 40px;
+  padding: 8px 12px 8px 40px;
   text-align: left;
   border: none;
   position: relative;
