@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="formbuilder">
+<html>
 <head>
   <title>Formbuilder</title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
@@ -7,121 +7,46 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
+  <nav class="navbar navbar-default navbar-static-top" role="navigation">
+    <div class="container">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <%= link_to "formbuilder", root_path, class: "navbar-brand" %>
+      </div>
 
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <% if current_user %>
+            <%= link_to_li "Home", group_path(root_group) %>
+          <% end %>
+          <%= link_to_li "All Groups", groups_path %>
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right">
+          <% if current_user %>
+            <%= link_to_li "Edit Profile", edit_user_path(current_user.id) %>
+            <%= link_to_li "Logout", :logout, method: :post %>
+          <% else %>
+            <%= link_to_li "Register", new_user_path %>
+            <%= link_to_li "Login", :login %>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
   <div class="container">
     <div>
       <p id="notice"><%= flash[:notice] %></p>
       <p id="alert"><%= flash[:alert] %></p>
     </div>
-
-    <div ng-controller="Controller" >
-      <h1 class="text-center">BRCA1 Survey</h1>
-
-      <form novalidate name="theform" class="theform" ng-class="transitionDirection">
-        <div ng-form name="section0" ng-display="section0.$show" class="section">
-          <p class="lead">This questionnaire asks questions about your health and your family's health history.
-            Your answers will help decide whether you might benefit from tests to check for certain
-            gene mutations (especially BRCA) that increase risk of certain cancers.</p>
-
-          <p class="lead"> If you have
-            already had such tests, this questionnaire is not for you. If you don't know the answers
-             to the questions below, please try to collect that information and then talk with your doctor.</p>
-
-          <div class="col-sm-12 top15 center-text">
-            <button class="btn btn-default btn-lg btn-block btn-start" ng-click="next(0)">
-              Begin the Questionnaire <span class="icon-arrow-right2"></span>
-            </button>
-          </div>
-        </div>
-        <div ng-form name="section1" ng-display="section1.$show" class="section">
-          <button class="btn btn-default btn-prev col-xs-12" ng-click="prev(1)">
-            <span class="icon-arrow-left"></span> Prev
-          </button>
-
-          <div class="form-group">
-            <div class="col-sm-12 top15">
-                <input type="text" ng-model="ans.firstname" placeholder="First Name" class="form-control better-placeholder" required/>
-            </div>
-
-            <div class="col-sm-12 top15">
-              <input type="text" ng-model="ans.middlename" placeholder="Middle Name (Optional)" class="form-control better-placeholder"/>
-            </div>
-
-            <div class="col-sm-12 top15">
-              <input type="text" ng-model="ans.lastname" placeholder="Last Name" class="form-control better-placeholder" required/>
-            </div>
-
-            <div class="col-sm-12 top15">
-              <input type="text" ng-model="ans.birthdate" placeholder="Birthdate" class="form-control better-placeholder" pick-a-date required/>
-            </div>
-
-            <div class="col-sm-12 top15">
-              <input type="text" ng-model="ans.phonenumber" placeholder="Phone Number" class="form-control better-placeholder" required/>
-            </div>
-
-            <div class="col-sm-12 top15">
-              <input type="text" ng-model="ans.email" placeholder="Email (Optional)" class="form-control better-placeholder"/>
-            </div>
-          </div>
-
-          <div class="col-xs-12 top15 center-text">
-            <button class="btn btn-default btn-next btn-block" ng-display="section1.$valid" ng-click="next(1)">
-              Next <span class="icon-arrow-right2"></span>
-            </button>
-          </div>
-        </div>
-        <div ng-form name="section2" ng-display="section2.$show" class="section">
-          <div class="col-xs-12 top15 center-text">
-            <button class="btn btn-default btn-prev col-xs-12" ng-click="prev(2)">
-              <span class="icon-arrow-left"></span> Prev
-            </button>
-          </div>
-
-          <div class="col-sm-12 top15">
-            <button class="fm-radio btn btn-default" ng-model="ans.question1" btn-radio="'yes'" uncheckable>
-              <span class="icon" ng-class="{true:'icon-radio-checked', false:'icon-radio-unchecked'}[ans.question1=='yes']"></span>
-              This questionnaire asks questions about your health and your family's health history.
-              Your answers will help decide whether you might benefit from tests to check for certain
-            </button>
-            <button class="fm-radio btn btn-default" ng-model="ans.question1" btn-radio="'no'" uncheckable>
-              <span class="icon" ng-class="{true:'icon-radio-checked', false:'icon-radio-unchecked'}[ans.question1=='no']"></span>
-              No
-            </button>
-            <input type="hidden" ng-model="ans.question1" required/>
-          </div>
-
-          <div class="col-sm-12 top15">
-            <button class="fm-checkbox btn btn-default" ng-model="ans.question2.option1" btn-checkbox>
-              <span class="icon" ng-class="{true:'icon-checkbox-checked2', false:'icon-checkbox-unchecked3'}[ans.question2.option1 || false]"></span>
-              Option 1
-            </button>
-            <button class="fm-checkbox btn btn-default" ng-model="ans.question2.option2" btn-checkbox>
-              <span class="icon" ng-class="{true:'icon-checkbox-checked2', false:'icon-checkbox-unchecked3'}[ans.question2.option2 || false]"></span>
-              Option 2
-            </button>
-            <button class="fm-checkbox btn btn-default" ng-model="ans.question2.option3" btn-checkbox>
-              <span class="icon" ng-class="{true:'icon-checkbox-checked2', false:'icon-checkbox-unchecked3'}[ans.question2.option3 || false]"></span>
-              Option 3
-            </button>
-            <button class="fm-checkbox btn btn-default" ng-model="ans.question2.option4" btn-checkbox>
-              <span class="icon" ng-class="{true:'icon-checkbox-checked2', false:'icon-checkbox-unchecked3'}[ans.question2.option4 || false]"></span>
-              Option 4
-            </button>
-            <input type="hidden" ng-model="ans.question2"/>
-          </div>
-
-          <div class="col-xs-12 top15 center-text">
-            <button type="submit" class="btn btn-default btn-lg btn-block btn-submit" ng-display="theform.$valid">
-              Submit <span class="icon-download2"></span>
-            </button>
-          </div>
-        </div>
-        <div class="hide" ng-init="init()"></div>
-      </form>
-    </div>
-
-    <%# yield %>
+    <%= yield %>
   </div>
 </body>
 </html>
