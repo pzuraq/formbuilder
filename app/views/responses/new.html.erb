@@ -1,8 +1,8 @@
 <div ng-controller="formbuilder" >
   <h1 class="text-center"><%= @form.name %></h1>
 
-  <form novalidate name="theform" class="theform">
+  <%= form_for [@group, @form, @response], :html => {:novalidate => 'novalidate', :class => 'theform'} do %>
     <%= @compiled %>
     <div class="hide" ng-init="init()"></div>
-  </form>
+  <% end %>
 </div>

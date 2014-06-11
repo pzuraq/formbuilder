@@ -2,23 +2,30 @@
   <span class="glyphicon glyphicon-chevron-left"></span>
   Back
 <% end %>
-<br>
-<br>
-<p>
-  <strong>User:</strong>
-  <% if @response.respondent.nil? %>
-    Anonymous Response
-  <% else %>
-    <%= @response.respondent.username %>
+
+<h3>Form: <span class="lead"><%= @form.name %></span></h3>
+
+<h3>
+  User:
+  <span class="lead">
+    <% if @response.respondent.nil? %>
+      Anonymous Response
+    <% else %>
+      <%= @response.respondent.username %>
+    <% end %>
+  </span>
+</h3>
+
+<h3>Answers:</h3>
+<table class="table">
+  <thead>
+    <th>Question</th>
+    <th>Answer</th>
+  </thead>
+  <% @response.answers.each do |k, v| %>
+    <tr>
+      <td><%= k %></td>
+      <td><%= v %></td>
+    </tr>
   <% end %>
-</p>
-
-<p>
-  <strong>Answers:</strong>
-  <%= @response.answers %>
-</p>
-
-<p>
-  <strong>Form:</strong>
-  <%= @form.name %>
-</p>
+</table>

@@ -13,11 +13,13 @@ angular.module('ng.pickadate', []).
       link: function(scope, element, attrs) {
         var ngModel = $parse(attrs.ngModel);
         element.pickadate({
-          format: 'yyyy/mm/dd',
+          format: 'mm/dd/yyyy',
+          max: true,
+          selectYears: 100,
+          selectMonths: true,
           onSet: function(e){
             ngModel.assign(scope, this.get());
           }
-
         });
       }
     };

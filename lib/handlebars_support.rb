@@ -15,13 +15,13 @@ module HandlebarsSupport
 
       if context[:section_count] == 0
         navigation = "<div class=\"col-sm-12 top15 center-text\">
-                        <button class=\"btn btn-default btn-lg btn-block btn-start\" ng-click=\"next(0)\">
+                        <button type=\"button\" class=\"btn btn-default btn-lg btn-block btn-start\" ng-click=\"next(0)\">
                           Begin the Questionnaire <span class=\"icon-arrow-right2\"></span>
                         </button>
                       </div>"
       elsif options[:last]
         navigation = "<div class=\"prev-container\">
-                        <button class=\"btn btn-default btn-prev col-xs-12\" ng-click=\"prev(#{context[:section_count]})\">
+                        <button type=\"button\" class=\"btn btn-default btn-prev col-xs-12\" ng-click=\"prev(#{context[:section_count]})\">
                           <span class=\"icon-arrow-left\"></span> Prev
                         </button>
                       </div>
@@ -32,12 +32,12 @@ module HandlebarsSupport
                       </div>"
       else
         navigation = "<div class=\"prev-container\">
-                        <button class=\"btn btn-default btn-prev col-xs-12\" ng-click=\"prev(#{context[:section_count]})\">
+                        <button type=\"button\" class=\"btn btn-default btn-prev col-xs-12\" ng-click=\"prev(#{context[:section_count]})\">
                           <span class=\"icon-arrow-left\"></span> Prev
                         </button>
                       </div>
                       <div class=\"next-container\">
-                        <button class=\"btn btn-default btn-next btn-block\" ng-show=\"#{section_name}.$valid\" ng-click=\"next(#{context[:section_count]})\">
+                        <button type=\"button\" class=\"btn btn-default btn-next btn-block\" ng-show=\"#{section_name}.$valid\" ng-click=\"next(#{context[:section_count]})\">
                           Next <span class=\"icon-arrow-right2\"></span>
                         </button>
                       </div>"
@@ -133,7 +133,7 @@ module HandlebarsSupport
 
       render = block.fn(context)
 
-      "#{render}<input name=\"#{name}\" type=\"hidden\" ng-model=\"ans.#{name}\" ng-required=\"#{conditional}\"/>"
+      "#{render}<input name=\"ans[#{name}]\" type=\"hidden\" ng-value=\"ans.#{name}\" ng-required=\"#{conditional}\"/>"
     end
 
     handlebars.register_helper(:checkbox) do |context, block|
@@ -145,7 +145,7 @@ module HandlebarsSupport
 
       render = block.fn(context)
 
-      "#{render}<input name=\"#{name}\" type=\"hidden\" ng-model=\"ans.#{name}\" ng-required=\"#{conditional}\"/>"
+      "#{render}<input name=\"ans[#{name}]\" type=\"hidden\" ng-value=\"ans.#{name}\" ng-required=\"#{conditional}\"/>"
     end
 
     handlebars.register_helper(:option) do |context, block|
@@ -167,7 +167,7 @@ module HandlebarsSupport
       render = block.fn(context)
 
       "<div class=\"col-sm-12\">
-        <button class=\"#{klass}\" #{model} uncheckable>
+        <button type=\"button\" class=\"#{klass}\" #{model} uncheckable>
           <span class=\"icon\" ng-class=\"#{icon}\"></span>#{render}
         </button>
       </div>"
@@ -181,7 +181,7 @@ module HandlebarsSupport
 
 
       "<div class=\"col-sm-12 top15\">
-        <input type=\"text\" name=\"#{name}\" ng-model=\"ans.#{name}\" placeholder=\"#{placeholder}\" class=\"form-control better-placeholder\" ng-required=\"#{conditional}\"/>
+        <input type=\"text\" name=\"ans[#{name}]\" ng-model=\"ans.#{name}\" placeholder=\"#{placeholder}\" class=\"form-control better-placeholder\" ng-required=\"#{conditional}\"/>
       </div>"
     end
 
@@ -193,7 +193,7 @@ module HandlebarsSupport
 
 
       "<div class=\"col-sm-12 top15\">
-        <input type=\"text\" name=\"#{name}\" ng-model=\"ans.#{name}\" placeholder=\"#{placeholder}\" class=\"form-control better-placeholder\" pick-a-date ng-required=\"#{conditional}\"/>
+        <input type=\"text\" name=\"ans[#{name}]\" ng-model=\"ans.#{name}\" placeholder=\"#{placeholder}\" class=\"form-control better-placeholder\" pick-a-date ng-required=\"#{conditional}\"/>
       </div>"
     end
 
