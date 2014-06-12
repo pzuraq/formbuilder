@@ -133,7 +133,7 @@ module HandlebarsSupport
 
       render = block.fn(context)
 
-      "#{render}<input name=\"ans[#{name}]\" type=\"hidden\" ng-value=\"ans.#{name}\" ng-required=\"#{conditional}\"/>"
+      "#{render}<input name=\"ans[#{name}]\" type=\"hidden\" ng-model=\"ans.#{name}\" ng-value=\"ans.#{name}\" ng-required=\"#{conditional}\"/>"
     end
 
     handlebars.register_helper(:checkbox) do |context, block|
@@ -145,7 +145,7 @@ module HandlebarsSupport
 
       render = block.fn(context)
 
-      "#{render}<input name=\"ans[#{name}]\" type=\"hidden\" ng-value=\"ans.#{name}\" ng-required=\"#{conditional}\"/>"
+      "#{render}<input name=\"ans[#{name}]\" type=\"hidden\" ng-model=\"ans.#{name}\" ng-value=\"ans.#{name}\" ng-required=\"#{conditional}\"/>"
     end
 
     handlebars.register_helper(:option) do |context, block|
